@@ -46,7 +46,7 @@ class _ListaReceitaState extends State<ListaReceita> {
 
       var receita = {
         'nome': row[1],
-        'tempopreparo': row[2],
+        'tempoPreparo': row[2],
         'modoPreparo':row[3],
         'ingredientes':row[4],
         'tags': row[5],

@@ -62,7 +62,6 @@ class PesquisadorSearch extends SearchDelegate {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text(suggestions[index]['nome']),
-          subtitle: Text(suggestions[index]['areaConhecimento']),
           onTap: () async {
             await Navigator.push(
               context,

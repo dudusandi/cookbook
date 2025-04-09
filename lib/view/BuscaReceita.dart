@@ -58,15 +58,14 @@ class PesquisaSearch extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     final suggestions = pesquisas
         .where((pesquisa) =>
-        pesquisa['titulo'].toLowerCase().contains(query.toLowerCase()))
+        pesquisa['nome'].toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
       itemCount: suggestions.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(suggestions[index]['titulo']),
-          subtitle: Text(suggestions[index]['datainicial']),
+          title: Text(suggestions[index]['nome']),
           onTap: () async {
             await Navigator.pushNamed(context, '/dadosprojeto',
                 arguments: suggestions[index])
