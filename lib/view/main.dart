@@ -1,14 +1,14 @@
-import 'package:flush/view/dados_projeto.dart';
+import 'package:flush/view/dados_receita.dart';
 import 'package:flutter/material.dart';
 import 'package:flush/view/ajustes.dart';
 import '../data/banco.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'cadastro_pesquisador.dart';
-import 'cadastro_projeto.dart';
+import 'cadastro_tag.dart';
+import 'cadastro_receita.dart';
 import 'home.dart';
-import 'lista_projeto.dart';
-import 'dados_pesquisador.dart';
-import 'lista_pesquisadores.dart';
+import 'lista_receita.dart';
+import 'dados_tag.dart';
+import 'lista_tag.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,17 +27,17 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('pt', 'BR'), // English, UK
+        Locale('pt', 'BR'), 
       ],
       initialRoute: '/',
       routes: {
         '/': (context) => const Inicio(),
-        '/detalhes': (context) => const DadosPesquisador(),
-        '/cadastro': (context) => const CadastroPesquisador(),
-        '/cadastro_projeto': (context) => const CadastroProjeto(),
+        '/detalhes': (context) => const DadosTag(),
+        '/cadastro': (context) => const CadastroTag(),
+        '/cadastro_projeto': (context) => const CadastroReceita(),
         '/ajustes': (context) => const Ajustes(),
-        '/listapesquisadores': (context) => const PesquisadoresListScreen(),
-        '/dadosprojeto': (context) => const DadosProjeto()
+        '/listapesquisadores': (context) => const TelaTag(),
+        '/dadosprojeto': (context) => const DadosReceita()
       },
     );
   }
@@ -62,8 +62,9 @@ class InicioState extends State<Inicio> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const PesquisadoresListScreen(),
-    const ListaProjeto(),
+    const ListaReceita(),
+    const TelaTag(),
+
   ];
 
   void _onItemTapped(int index) {
@@ -85,8 +86,8 @@ class InicioState extends State<Inicio> {
             color: Colors.white,
           )
         ],
-        backgroundColor: const Color(0xff004c9e),
-        title: const Text('Flush'),
+        backgroundColor: const Color.fromARGB(255, 143, 0, 57),
+        title: const Text('CookBook'),
         foregroundColor: Colors.white,
       ),
       body: _pages[_selectedIndex],
@@ -99,12 +100,12 @@ class InicioState extends State<Inicio> {
             label: 'Início',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Pesquisadores',
+            icon: Icon(Icons.book_rounded),
+            label: 'Receitas',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Projetos',
+            icon: Icon(Icons.tag),
+            label: 'Tags',
           ),
         ],
       ),

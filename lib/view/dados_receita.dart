@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
 
-class DadosProjeto extends StatefulWidget {
-  const DadosProjeto({super.key});
+class DadosReceita extends StatefulWidget {
+  const DadosReceita({super.key});
 
   @override
-  State<DadosProjeto> createState() => _DadosProjetoState();
+  State<DadosReceita> createState() => _DadosReceitaState();
 }
 
-class _DadosProjetoState extends State<DadosProjeto> {
+class _DadosReceitaState extends State<DadosReceita> {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> data =
@@ -24,7 +24,7 @@ class _DadosProjetoState extends State<DadosProjeto> {
         actions: [
           IconButton(
               onPressed: () async {
-                await banco.removerPesquisa(data['titulo']);
+                await banco.removerReceita(data['nome']);
                 if (context.mounted) {
                   Navigator.pop(context, true);
                 }
@@ -45,14 +45,14 @@ class _DadosProjetoState extends State<DadosProjeto> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Titulo:',
+                    'Nome:',
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey,
                     ),
                   ),
                   Text(
-                    data["titulo"],
+                    data["nome"],
                     style: const TextStyle(
                       fontSize: 20,
                     ),
@@ -64,27 +64,7 @@ class _DadosProjetoState extends State<DadosProjeto> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Descrição:',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    data["descricao"],
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Referências:',
+                    'Tempo de Preparo:',
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey,
@@ -92,7 +72,7 @@ class _DadosProjetoState extends State<DadosProjeto> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    data["referencia"],
+                    data["tempoPreparo"],
                     style: const TextStyle(
                       fontSize: 20,
                     ),
@@ -104,7 +84,7 @@ class _DadosProjetoState extends State<DadosProjeto> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'DataInicial:',
+                    'Modo de Preparo:',
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey,
@@ -112,7 +92,7 @@ class _DadosProjetoState extends State<DadosProjeto> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    data["datainicial"],
+                    data["modoPreparo"],
                     style: const TextStyle(
                       fontSize: 20,
                     ),
@@ -124,7 +104,7 @@ class _DadosProjetoState extends State<DadosProjeto> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'DataFinal:',
+                    'Ingredientes:',
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey,
@@ -132,7 +112,7 @@ class _DadosProjetoState extends State<DadosProjeto> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    data["datafinal"],
+                    data["ingredientes"],
                     style: const TextStyle(
                       fontSize: 20,
                     ),
@@ -144,7 +124,7 @@ class _DadosProjetoState extends State<DadosProjeto> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Pesquisadores:',
+                    'Tags:',
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey,
@@ -153,16 +133,16 @@ class _DadosProjetoState extends State<DadosProjeto> {
                   const SizedBox(height: 5),
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: data["pesquisadores"].split(', ').length,
+                    itemCount: data["tags"].split(', ').length,
                     itemBuilder: (context, index) {
-                      String pesquisador =
-                          data["pesquisadores"].split(', ')[index];
+                      String tag =
+                          data["tags"].split(', ')[index];
 
-                      pesquisador =
-                          pesquisador.replaceAll(RegExp(r'[\[\]]'), '');
+                      tag =
+                          tag.replaceAll(RegExp(r'[\[\]]'), '');
 
                       return Text(
-                        pesquisador,
+                        tag,
                         style: const TextStyle(
                           fontSize: 20,
                         ),

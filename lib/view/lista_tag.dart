@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flush/view/dados_pesquisador.dart';
+import 'package:flush/view/dados_tag.dart';
 import 'package:postgres/postgres.dart';
 import '../data/banco.dart';
-import 'PesquisadorSearch.dart';
+import 'BuscaTag.dart';
 
-class PesquisadoresListScreen extends StatefulWidget {
-  const PesquisadoresListScreen({super.key});
+class TelaTag extends StatefulWidget {
+  const TelaTag({super.key});
 
   @override
-  PesquisadoresListScreenState createState() => PesquisadoresListScreenState();
+  TelaTagState createState() => TelaTagState();
 }
 
-class PesquisadoresListScreenState extends State<PesquisadoresListScreen> {
+class TelaTagState extends State<TelaTag> {
   Banco banco = Banco();
 
-  List<Map<String, dynamic>> pesquisadores = [];
-  List<Map<String, dynamic>> pesquisadoresFiltrados = [];
+  List<Map<String, dynamic>> tags = [];
+  List<Map<String, dynamic>> tagsFiltradas = [];
 
   bool _isLoading = true;
   TextEditingController searchController = TextEditingController();
@@ -27,47 +27,47 @@ class PesquisadoresListScreenState extends State<PesquisadoresListScreen> {
     searchController.addListener(() {
       setState(() {
         searchText = searchController.text;
-        filtrarPesquisadores();
+        filtrarTags();
       });
     });
-    atualizarListaPesquisadores();
+    atualizarListaTags();
   }
 
-  Future<void> atualizarListaPesquisadores() async {
+  Future<void> atualizarListaTags() async {
     Connection conn = await banco.conectarbanco();
 
     setState(() {
-      pesquisadores.clear();
+      tags.clear();
       _isLoading = true;
     });
 
     final results = await conn.execute(
-      Sql.named('SELECT * FROM pesquisadores ORDER BY nome'),
+      Sql.named('SELECT * FROM tags ORDER BY nome'),
     );
 
     for (var row in results) {
-      var pesquisador = {
+      var tag = {
         'nome': row[0],
-        'areaConhecimento': row[2],
-        'tipoConhecimento': row[3],
-        'cpf': row[1]
+        'descricao': row[1],
+        'dificuldade': row[2],
+        'culinaria': row[3]
       };
-      pesquisadores.add(pesquisador);
+      tags.add(tag);
     }
 
     await conn.close();
-    filtrarPesquisadores();
+    filtrarTags();
     setState(() {
       _isLoading = false;
     });
   }
 
-  void filtrarPesquisadores() {
+  void filtrarTags() {
     if (searchText.isEmpty) {
-      pesquisadoresFiltrados = List.from(pesquisadores);
+      tagsFiltradas = List.from(tags);
     } else {
-      pesquisadoresFiltrados = pesquisadores
-          .where((pesquisador) => pesquisador['nome']
+      tagsFiltradas = tags
+          .where((tag) => tag['nome']
               .toLowerCase()
               .contains(searchText.toLowerCase()))
           .toList();
@@ -78,11 +78,11 @@ class PesquisadoresListScreenState extends State<PesquisadoresListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pesquisadores'),
+        title: const Text('Tags'),
         actions: [
           IconButton(
             onPressed: () {
-              atualizarListaPesquisadores();
+              atualizarListaTags();
             },
             icon: const Icon(Icons.refresh),
           ),
@@ -92,12 +92,12 @@ class PesquisadoresListScreenState extends State<PesquisadoresListScreen> {
                 (value) => setState(
                   () {
                     if (value == true) {
-                      atualizarListaPesquisadores();
+                      atualizarListaTags();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content: Text(erroAddPesquisador!.isNotEmpty
                                 ? 'Erro ao Cadastrar'
-                                : 'Pesquisador Cadastrado')),
+                                : 'Tag Cadastrada')),
                       );
                       erroAddPesquisador = '';
                     }
@@ -111,7 +111,7 @@ class PesquisadoresListScreenState extends State<PesquisadoresListScreen> {
             onPressed: () {
               showSearch(
                   context: context,
-                  delegate: PesquisadorSearch(pesquisadoresFiltrados));
+                  delegate: PesquisadorSearch(tagsFiltradas));
             },
             icon: const Icon(Icons.search),
           ),
@@ -122,22 +122,22 @@ class PesquisadoresListScreenState extends State<PesquisadoresListScreen> {
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemCount: pesquisadores.length,
+              itemCount: tags.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(pesquisadores[index]['nome']),
-                  subtitle: Text(pesquisadores[index]['areaConhecimento']),
+                  title: Text(tags[index]['nome']),
+                  subtitle: Text(tags[index]['descricao']),
                   onTap: () async {
                     await Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const DadosPesquisador(),
+                                builder: (context) => const DadosTag(),
                                 settings: RouteSettings(
-                                    arguments: pesquisadores[index])))
+                                    arguments: tags[index])))
                         .then(
                       (value) => setState(() {
                         if (value == true) {
-                          atualizarListaPesquisadores();
+                          atualizarListaTags();
                         }
                       }),
                     );

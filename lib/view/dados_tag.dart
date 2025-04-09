@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
 
-class DadosPesquisador extends StatefulWidget {
-  const DadosPesquisador({super.key});
+class DadosTag extends StatefulWidget {
+  const DadosTag({super.key});
 
   @override
-  State<DadosPesquisador> createState() => _DadosPesquisadorState();
+  State<DadosTag> createState() => _DadosTagState();
 }
 
-class _DadosPesquisadorState extends State<DadosPesquisador> {
+class _DadosTagState extends State<DadosTag> {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> data =
@@ -18,13 +18,13 @@ class _DadosPesquisadorState extends State<DadosPesquisador> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalhes'),
+        title: const Text('Tag'),
         foregroundColor: Colors.white,
         backgroundColor: const Color(0xff004c9e),
         actions: [
           IconButton(
               onPressed: () async {
-                await banco.removerPesquisador(data['nome']);
+                await banco.removerTag(data['nome']);
                 if (context.mounted) {
                   Navigator.pop(context, true);
                 }
@@ -63,7 +63,7 @@ class _DadosPesquisadorState extends State<DadosPesquisador> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Cargo:',
+                  'Descrição:',
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.grey,
@@ -71,7 +71,7 @@ class _DadosPesquisadorState extends State<DadosPesquisador> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  data["areaConhecimento"],
+                  data["descricao"],
                   style: const TextStyle(
                     fontSize: 20,
                   ),
@@ -83,7 +83,7 @@ class _DadosPesquisadorState extends State<DadosPesquisador> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Formação:',
+                  'Dificuldade:',
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.grey,
@@ -91,7 +91,7 @@ class _DadosPesquisadorState extends State<DadosPesquisador> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  data["tipoConhecimento"],
+                  data["dificuldade"],
                   style: const TextStyle(
                     fontSize: 20,
                   ),
@@ -103,7 +103,7 @@ class _DadosPesquisadorState extends State<DadosPesquisador> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'CPF:',
+                  'Culinaria:',
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.grey,
@@ -111,7 +111,7 @@ class _DadosPesquisadorState extends State<DadosPesquisador> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  data["cpf"],
+                  data["culinaria"],
                   style: const TextStyle(
                     fontSize: 20,
                   ),

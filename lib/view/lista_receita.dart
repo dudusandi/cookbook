@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:postgres/postgres.dart';
 import '../data/banco.dart';
-import 'PesquisaSearch.dart';
+import 'BuscaReceita.dart';
 
-class ListaProjeto extends StatefulWidget {
-  const ListaProjeto({super.key});
+class ListaReceita extends StatefulWidget {
+  const ListaReceita({super.key});
 
   @override
-  State<ListaProjeto> createState() => _ListaProjetoState();
+  State<ListaReceita> createState() => _ListaReceitaState();
 }
 
-class _ListaProjetoState extends State<ListaProjeto> {
+class _ListaReceitaState extends State<ListaReceita> {
   Banco banco = Banco();
-  List<Map<String, dynamic>> pesquisas = [];
-  List<Map<String, dynamic>> pesquisasFiltradas = [];
+  List<Map<String, dynamic>> receitas = [];
+  List<Map<String, dynamic>> receitasFiltradas = [];
   bool _isLoading = true;
   TextEditingController searchController = TextEditingController();
   String searchText = "";
@@ -25,7 +24,7 @@ class _ListaProjetoState extends State<ListaProjeto> {
     searchController.addListener(() {
       setState(() {
         searchText = searchController.text;
-        filtrarPesquisas();
+        filtrarReceitas();
       });
     });
     atualizarListaPesquisas();
@@ -35,44 +34,40 @@ class _ListaProjetoState extends State<ListaProjeto> {
     Connection conn = await banco.conectarbanco();
 
     setState(() {
-      pesquisas.clear();
+      receitas.clear();
       _isLoading = true;
     });
 
     final results = await conn.execute(
-      Sql.named('SELECT * FROM pesquisas ORDER BY titulo'),
+      Sql.named('SELECT * FROM receitas ORDER BY nome'),
     );
 
     for (var row in results) {
-      var dataInicial = row[3];
-      var dataFinal = row[4];
 
-      var pesquisa = {
-        'titulo': row[1],
-        'descricao': row[2],
-        'datainicial': DateFormat('dd/MM/yyyy').format(dataInicial as DateTime),
-        'datafinal': DateFormat('dd/MM/yyyy').format(dataFinal as DateTime),
-        'pesquisadores': row[5],
-        'referencia': row[8]
-
+      var receita = {
+        'nome': row[1],
+        'tempopreparo': row[2],
+        'modoPreparo':row[3],
+        'ingredientes':row[4],
+        'tags': row[5],
       };
-      pesquisas.add(pesquisa);
+      receitas.add(receita);
     }
 
     await conn.close();
-    filtrarPesquisas();
+    filtrarReceitas();
     setState(() {
       _isLoading = false;
     });
   }
 
-  void filtrarPesquisas() {
+  void filtrarReceitas() {
     if (searchText.isEmpty) {
-      pesquisasFiltradas = List.from(pesquisas);
+      receitasFiltradas = List.from(receitas);
     } else {
-      pesquisasFiltradas = pesquisas
-          .where((pesquisa) =>
-          pesquisa['titulo'].toLowerCase().contains(searchText.toLowerCase()))
+      receitasFiltradas = receitas
+          .where((receita) =>
+          receita['nome'].toLowerCase().contains(searchText.toLowerCase()))
           .toList();
     }
   }
@@ -81,7 +76,7 @@ class _ListaProjetoState extends State<ListaProjeto> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Projetos'),
+        title: const Text('Receitas'),
         actions: [
           IconButton(
             onPressed: () {
@@ -101,7 +96,7 @@ class _ListaProjetoState extends State<ListaProjeto> {
           ),
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: PesquisaSearch(pesquisas));
+              showSearch(context: context, delegate: PesquisaSearch(receitas));
             },
             icon: const Icon(Icons.search),
           ),
@@ -112,14 +107,13 @@ class _ListaProjetoState extends State<ListaProjeto> {
         child: CircularProgressIndicator(),
       )
           : ListView.builder(
-        itemCount: pesquisasFiltradas.length,
+        itemCount: receitasFiltradas.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(pesquisasFiltradas[index]['titulo']),
-            subtitle: Text(pesquisasFiltradas[index]['datainicial']),
+            title: Text(receitasFiltradas[index]['nome']),
             onTap: () async {
               await Navigator.pushNamed(context, '/dadosprojeto',
-                  arguments: pesquisasFiltradas[index])
+                  arguments: receitasFiltradas[index])
                   .then((value) => setState(() {
                 value == true ? atualizarListaPesquisas() : null;
               }));

@@ -52,28 +52,25 @@ class Banco {
 
     await conn.execute('''
     
-    CREATE TABLE IF NOT EXISTS public.pesquisadores (
+    CREATE TABLE IF NOT EXISTS public.tags (
     nome TEXT,
-    cpf TEXT PRIMARY KEY,
-    tipo TEXT,
-    areaconhecimento TEXT,
+    descricao TEXT PRIMARY KEY,
+    dificuldade TEXT,
+    culinaria TEXT,
     projeto TEXT
-)
+    )
 
      ''');
 
     await conn.execute('''
     
-    CREATE TABLE IF NOT EXISTS public.pesquisas(
+    CREATE TABLE IF NOT EXISTS public.receitas (
     id SERIAL PRIMARY KEY,
-    titulo TEXT,
-    descricao TEXT,
-    datainicio DATE,
-    datafim DATE,
-    pesquisadores TEXT,
-    empresa TEXT,
-    valor TEXT,
-    referencia TEXT
+    nome TEXT,
+    tempoPreparo TEXT,
+    modoPreparo TEXT,
+    ingredientes TEXT,
+    tags TEXT
     )
     
      ''');
@@ -81,15 +78,15 @@ class Banco {
     await conn.close();
   }
 
-  Future<void> adicionarPesquisador(
-      String nome, String cpf, String tipo, String area) async {
+  Future<void> adicionarTag(
+      String nome, String descricao, String dificuldade, String culinaria) async {
     Connection conn = await conectarbanco();
 
     try {
       await conn.execute('''
       
-      INSERT INTO pesquisadores (nome, cpf, tipo, areaconhecimento) 
-      VALUES ('$nome', '$cpf', '$tipo', '$area')
+      INSERT INTO tags (nome, descricao, dificuldade, culinaria) 
+      VALUES ('$nome', '$descricao', '$dificuldade', '$culinaria')
       
       ''');
 
@@ -99,62 +96,59 @@ class Banco {
     }
   }
 
-  Future<void> removerPesquisador(String nome) async {
+  Future<void> removerTag(String nome) async {
     Connection conn = await conectarbanco();
 
     await conn.execute('''
-      DELETE FROM pesquisadores 
+      DELETE FROM tags 
       WHERE nome = '$nome'
       ''');
     await conn.close();
   }
 
-  Future<void> removerPesquisa(String titulo) async {
+  Future<void> removerReceita(String nome) async {
     Connection conn = await conectarbanco();
 
     await conn.execute('''
-      DELETE FROM pesquisas
-      WHERE titulo = '$titulo'
+      DELETE FROM receitas
+      WHERE nome = '$nome'
       ''');
     await conn.close();
   }
 
   Future<void> salvarProjeto(
-      String titulo,
-      String empresa,
-      String descricao,
-      String referencia,
-      String valor,
-      String? dataInicio,
-      String? dataFim,
-      List<String> pesquisadores,
+      String nome,
+      String tempo,
+      String ingredientes,
+      String modoPreparo,
+      List<String> tags,
       ) async {
     Connection conn = await conectarbanco();
 
     await conn.execute('''
-      INSERT INTO public.pesquisas (titulo, descricao, datainicio, datafim, pesquisadores,empresa,valor, referencia)
-      VALUES ('$titulo', '$descricao', '$dataInicio', '$dataFim', '$pesquisadores','$empresa', '$valor', '$referencia')
+      INSERT INTO public.receitas (nome,tempoPreparo,modoPreparo,ingredientes,tags)
+      VALUES ('$nome', '$tempo', '$modoPreparo','$ingredientes', '$tags')
     ''');
 
     await conn.close();
   }
 
-  Future<List<Map<String, dynamic>>> listarPesquisadores() async {
+  Future<List<Map<String, dynamic>>> listarTags() async {
     Connection conn = await conectarbanco();
 
     final results = await conn.execute(
-      Sql.named('SELECT * FROM pesquisadores ORDER BY nome'),
+      Sql.named('SELECT * FROM tags ORDER BY nome'),
     );
-    List<Map<String, dynamic>> pesquisadores = [];
+    List<Map<String, dynamic>> tags = [];
 
     for (var row in results) {
-      var pesquisador = {
+      var tag = {
         'nome': row[0],
       };
-      pesquisadores.add(pesquisador);
+      tags.add(tag);
     }
 
     await conn.close();
-    return pesquisadores;
+    return tags;
   }
 }

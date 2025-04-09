@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'dados_pesquisador.dart';
+import 'dados_tag.dart';
 
 class PesquisadorSearch extends SearchDelegate {
   final List<Map<String, dynamic>> pesquisadores;
@@ -67,7 +67,7 @@ class PesquisadorSearch extends SearchDelegate {
             await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const DadosPesquisador(),
+                builder: (context) => const DadosTag(),
                 settings: RouteSettings(arguments: suggestions[index]),
               ),
             ).then((value) {

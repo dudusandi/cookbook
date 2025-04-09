@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 20),
             child: Text(
-              "Sistema de Pesquisas e Inovação",
+              "Livro de Receitas",
             ),
           ),
         ],

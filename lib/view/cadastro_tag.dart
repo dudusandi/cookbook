@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flush/view/ajustes.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../data/banco.dart';
 
-class CadastroPesquisador extends StatefulWidget {
-  const CadastroPesquisador({super.key});
+class CadastroTag extends StatefulWidget {
+  const CadastroTag({super.key});
 
   @override
-  CadastroPesquisadorState createState() => CadastroPesquisadorState();
+  CadastroTagState createState() => CadastroTagState();
 }
 
 AjustesState ajustesState = AjustesState();
 
-class CadastroPesquisadorState extends State<CadastroPesquisador> {
-  var maskFormatter = MaskTextInputFormatter(mask: '###.###.###-##');
-
+class CadastroTagState extends State<CadastroTag> {
   Banco banco = Banco();
 
   @override
@@ -22,16 +19,16 @@ class CadastroPesquisadorState extends State<CadastroPesquisador> {
     super.initState();
   }
 
-  String _tipoSelecionado = 'Escolha';
-  String _areaSelecionada = 'Escolha';
+  String _dificuldadeSelecionado = 'Escolha';
+  String _culinariaSelecionada = 'Escolha';
 
   final _nomeController = TextEditingController();
-  final _cpfController = TextEditingController();
+  final _descricaoController = TextEditingController();
 
   @override
   void dispose() {
     _nomeController.dispose();
-    _cpfController.dispose();
+    _descricaoController.dispose();
     super.dispose();
   }
 
@@ -40,16 +37,16 @@ class CadastroPesquisadorState extends State<CadastroPesquisador> {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: const Color(0xff004c9e),
-          title: const Text('Cadastrar Pesquisador'),
+          title: const Text('Nova Tag'),
           foregroundColor: Colors.white,
           actions: [
             IconButton(
                 onPressed: () async {
-                  await banco.adicionarPesquisador(
+                  await banco.adicionarTag(
                     _nomeController.text,
-                    _cpfController.text,
-                    _tipoSelecionado,
-                    _areaSelecionada,
+                    _descricaoController.text,
+                    _dificuldadeSelecionado,
+                    _culinariaSelecionada,
                   );
                   if (!context.mounted) return;
                   Navigator.pop(context, true);
@@ -78,9 +75,7 @@ class CadastroPesquisadorState extends State<CadastroPesquisador> {
             ),
             const SizedBox(height: 30.0),
             TextFormField(
-              controller: _cpfController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [maskFormatter],
+              controller: _descricaoController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
@@ -88,19 +83,19 @@ class CadastroPesquisadorState extends State<CadastroPesquisador> {
                 ),
                 filled: true,
                 fillColor: Colors.black12,
-                labelText: 'CPF',
+                labelText: 'Descrição',
               ),
             ),
             const SizedBox(height: 30.0),
             DropdownButtonFormField<String>(
-              value: _tipoSelecionado,
+              value: _dificuldadeSelecionado,
               borderRadius: BorderRadius.circular(20),
               onChanged: (String? newValue) {
                 setState(() {
-                  _tipoSelecionado = newValue!;
+                  _dificuldadeSelecionado = newValue!;
                 });
               },
-              items: <String>['Escolha', 'Aluno', 'Professor', 'Funcionário']
+              items: <String>['Escolha', 'Facil', 'Normal', 'Dificil']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -115,62 +110,28 @@ class CadastroPesquisadorState extends State<CadastroPesquisador> {
                 filled: true,
                 fillColor: Colors.black12,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelText: 'Cargo',
+                labelText: 'Dificuldade',
                 labelStyle: const TextStyle(color: Colors.black)
               ),
             ),
             const SizedBox(height: 30.0),
             DropdownButtonFormField<String>(
-              value: _areaSelecionada,
+              value: _culinariaSelecionada,
               borderRadius: BorderRadius.circular(20),
               onChanged: (String? newValue) {
                 setState(() {
-                  _areaSelecionada = newValue!;
+                  _culinariaSelecionada = newValue!;
                 });
               },
               items: <String>[
                 'Escolha',
-                'Administração de Empresas',
-                'Arquitetura',
-                'Artes Cênicas',
-                'Astronomia',
-                'Biologia',
-                'Ciência da Computação',
-                'Ciência da Informação',
-                'Ciências Ambientais',
-                'Ciências Políticas',
-                'Comunicação Social',
-                'Design de Interiores',
-                'Design Gráfico',
-                'Direito',
-                'Economia',
-                'Educação Física',
-                'Enfermagem',
-                'Engenharia Ambiental',
-                'Engenharia Biomédica',
-                'Engenharia Civil',
-                'Engenharia de Alimentos',
-                'Engenharia de Software',
-                'Engenharia Elétrica',
-                'Engenharia Mecânica',
-                'Farmácia',
-                'Filosofia',
-                'Física',
-                'Geografia',
-                'História',
-                'Jornalismo',
-                'Letras',
-                'Marketing',
-                'Matemática',
-                'Medicina',
-                'Música',
-                'Nutrição',
-                'Odontologia',
-                'Pedagogia',
-                'Psicologia',
-                'Química',
-                'Relações Internacionais',
-                'Turismo',
+                'Italiana',
+                'Brasileira',
+                'Japonesa',
+                'Arabe',
+                'Mexicana',
+                'Francesa',
+                'Americana'
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -185,7 +146,7 @@ class CadastroPesquisadorState extends State<CadastroPesquisador> {
                 filled: true,
                 fillColor: Colors.black12,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelText: 'Formação',
+                labelText: 'Culinária',
               ),
             ),
           ],
