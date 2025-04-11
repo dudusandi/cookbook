@@ -19,20 +19,19 @@ class _CadastroReceitaState extends State<CadastroReceita> {
   final ingredientesController = TextEditingController();
 
   Banco banco = Banco();
-  List<Map<String, dynamic>> _pesquisadores = [];
   List<String> _tags = [];
 
-  Future<void> _carregarPesquisadores() async {
-    List<Map<String, dynamic>> pesquisadores = await banco.listarTags();
+  Future<void> _carregarTags() async {
+    List<String> tags = await banco.listarTags();
     setState(() {
-      _pesquisadores = pesquisadores;
+      _tags = tags;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _carregarPesquisadores();
+    _carregarTags();
   }
 
   @override
@@ -138,9 +137,8 @@ class _CadastroReceitaState extends State<CadastroReceita> {
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.black12),
                 searchable: true,
-                items: _pesquisadores
-                    .map((pesquisador) => MultiSelectItem<String>(
-                        pesquisador['nome'], pesquisador['nome']))
+                items: _tags
+                    .map((tag) => MultiSelectItem<String>(tag, tag))
                     .toList(),
                 onConfirm: (values) {
                   setState(() {

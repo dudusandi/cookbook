@@ -71,7 +71,7 @@ class BuscaTag extends SearchDelegate {
                 settings: RouteSettings(arguments: suggestions[index]),
               ),
             ).then((value) {
-              if (value == true) {
+              if (value == true && context.mounted) {
                 close(context, true);
               }
             });

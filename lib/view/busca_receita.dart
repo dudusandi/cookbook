@@ -40,11 +40,11 @@ class BuscaReceita extends SearchDelegate {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text(results[index].nome),
-          onTap: () async {
-            await Navigator.pushNamed(context, '/dadosprojeto',
+          onTap: () {
+             Navigator.pushNamed(context, '/dadosprojeto',
                 arguments: results[index])
                 .then((value) {
-              if (value == true) {
+              if (value == true && context.mounted) {
                 close(context, true);
               }
             });
@@ -70,7 +70,7 @@ class BuscaReceita extends SearchDelegate {
             await Navigator.pushNamed(context, '/dadosprojeto',
                 arguments: suggestions[index])
                 .then((value) {
-              if (value == true) {
+              if (value == true && context.mounted) {
                 close(context, true);
               }
             });

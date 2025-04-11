@@ -91,25 +91,6 @@ class Banco {
   await conn.close();
 }
 
-
-  // Future<void> adicionarTag(
-  //     String nome, String descricao, String dificuldade, String culinaria) async {
-  //   Connection conn = await conectarbanco();
-
-  //   try {
-  //     await conn.execute('''
-      
-  //     INSERT INTO tags (nome, descricao, dificuldade, culinaria) 
-  //     VALUES ('$nome', '$descricao', '$dificuldade', '$culinaria')
-      
-  //     ''');
-
-  //     await conn.close();
-  //   } catch (e) {
-  //     erroAddTag = e.toString();
-  //   }
-  // }
-
   Future<void> removerTag(String nome) async {
     Connection conn = await conectarbanco();
 
@@ -142,36 +123,16 @@ class Banco {
 }
 
 
-  // Future<void> salvarReceita(
-  //     String nome,
-  //     String tempo,
-  //     String ingredientes,
-  //     String modoPreparo,
-  //     List<String> tags,
-  //     ) async {
-  //   Connection conn = await conectarbanco();
-
-  //   await conn.execute('''
-  //     INSERT INTO public.receitas (nome,tempoPreparo,modoPreparo,ingredientes,tags)
-  //     VALUES ('$nome', '$tempo', '$modoPreparo','$ingredientes', '$tags')
-  //   ''');
-
-  //   await conn.close();
-  // }
-
-  Future<List<Map<String, dynamic>>> listarTags() async {
+  Future<List<String>> listarTags() async {
     Connection conn = await conectarbanco();
 
     final results = await conn.execute(
       Sql.named('SELECT * FROM tags ORDER BY nome'),
     );
-    List<Map<String, dynamic>> tags = [];
+    List<String> tags = [];
 
     for (var row in results) {
-      var tag = {
-        'nome': row[0],
-      };
-      tags.add(tag);
+      tags.add(row[0] as String);
     }
 
     await conn.close();
