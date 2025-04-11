@@ -1,7 +1,9 @@
 import 'package:flush/controller/ajustes_controller.dart';
+import 'package:flush/model/receita.dart';
+import 'package:flush/model/tag.dart';
 import 'package:postgres/postgres.dart';
 
-String? erroAddPesquisador;
+String? erroAddTag;
 String? erroCriarBanco;
 String? erroConectarBanco;
 
@@ -78,23 +80,35 @@ class Banco {
     await conn.close();
   }
 
-  Future<void> adicionarTag(
-      String nome, String descricao, String dificuldade, String culinaria) async {
-    Connection conn = await conectarbanco();
+  Future<void> salvarTag(Tag tag) async {
+  Connection conn = await conectarbanco();
 
-    try {
-      await conn.execute('''
-      
-      INSERT INTO tags (nome, descricao, dificuldade, culinaria) 
-      VALUES ('$nome', '$descricao', '$dificuldade', '$culinaria')
-      
-      ''');
+  await conn.execute('''
+    INSERT INTO tags (nome, descricao, dificuldade, culinaria)
+    VALUES ('${tag.nome}', '${tag.descricao}', '${tag.dificuldade}', '${tag.culinaria}')
+  ''');
 
-      await conn.close();
-    } catch (e) {
-      erroAddPesquisador = e.toString();
-    }
-  }
+  await conn.close();
+}
+
+
+  // Future<void> adicionarTag(
+  //     String nome, String descricao, String dificuldade, String culinaria) async {
+  //   Connection conn = await conectarbanco();
+
+  //   try {
+  //     await conn.execute('''
+      
+  //     INSERT INTO tags (nome, descricao, dificuldade, culinaria) 
+  //     VALUES ('$nome', '$descricao', '$dificuldade', '$culinaria')
+      
+  //     ''');
+
+  //     await conn.close();
+  //   } catch (e) {
+  //     erroAddTag = e.toString();
+  //   }
+  // }
 
   Future<void> removerTag(String nome) async {
     Connection conn = await conectarbanco();
@@ -116,22 +130,34 @@ class Banco {
     await conn.close();
   }
 
-  Future<void> salvarProjeto(
-      String nome,
-      String tempo,
-      String ingredientes,
-      String modoPreparo,
-      List<String> tags,
-      ) async {
-    Connection conn = await conectarbanco();
+  Future<void> salvarReceita(Receita receita) async {
+  Connection conn = await conectarbanco();
 
-    await conn.execute('''
-      INSERT INTO public.receitas (nome,tempoPreparo,modoPreparo,ingredientes,tags)
-      VALUES ('$nome', '$tempo', '$modoPreparo','$ingredientes', '$tags')
-    ''');
+  await conn.execute('''
+    INSERT INTO public.receitas (nome, tempoPreparo, modoPreparo, ingredientes, tags)
+    VALUES ('${receita.nome}', '${receita.tempoPreparo}', '${receita.modoPreparo}', '${receita.ingredientes}', '${receita.tags.join(',')}')
+  ''');
 
-    await conn.close();
-  }
+  await conn.close();
+}
+
+
+  // Future<void> salvarReceita(
+  //     String nome,
+  //     String tempo,
+  //     String ingredientes,
+  //     String modoPreparo,
+  //     List<String> tags,
+  //     ) async {
+  //   Connection conn = await conectarbanco();
+
+  //   await conn.execute('''
+  //     INSERT INTO public.receitas (nome,tempoPreparo,modoPreparo,ingredientes,tags)
+  //     VALUES ('$nome', '$tempo', '$modoPreparo','$ingredientes', '$tags')
+  //   ''');
+
+  //   await conn.close();
+  // }
 
   Future<List<Map<String, dynamic>>> listarTags() async {
     Connection conn = await conectarbanco();

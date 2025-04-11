@@ -1,3 +1,4 @@
+import 'package:flush/model/tag.dart';
 import 'package:flutter/material.dart';
 import 'package:flush/view/ajustes.dart';
 import '../data/banco.dart';
@@ -42,12 +43,13 @@ class CadastroTagState extends State<CadastroTag> {
           actions: [
             IconButton(
                 onPressed: () async {
-                  await banco.adicionarTag(
-                    _nomeController.text,
-                    _descricaoController.text,
-                    _dificuldadeSelecionado,
-                    _culinariaSelecionada,
+                  final tag = Tag(
+                    nome: _nomeController.text,
+                    descricao: _descricaoController.text,
+                    dificuldade: _dificuldadeSelecionado,
+                    culinaria: _culinariaSelecionada
                   );
+                  banco.salvarTag(tag);
                   if (!context.mounted) return;
                   Navigator.pop(context, true);
                 },

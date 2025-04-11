@@ -1,3 +1,4 @@
+import 'package:flush/model/tag.dart';
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
 
@@ -11,8 +12,9 @@ class DadosTag extends StatefulWidget {
 class _DadosTagState extends State<DadosTag> {
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> data =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+  final Tag tag = ModalRoute.of(context)!.settings.arguments as Tag;
+
 
     Banco banco = Banco();
 
@@ -24,7 +26,7 @@ class _DadosTagState extends State<DadosTag> {
         actions: [
           IconButton(
               onPressed: () async {
-                await banco.removerTag(data['nome']);
+                await banco.removerTag(tag.nome);
                 if (context.mounted) {
                   Navigator.pop(context, true);
                 }
@@ -46,12 +48,12 @@ class _DadosTagState extends State<DadosTag> {
                 const Text(
                   'Nome:',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 12,
                     color: Colors.grey,
                   ),
                 ),
                 Text(
-                  data["nome"],
+                  tag.nome,
                   style: const TextStyle(
                     fontSize: 20,
                   ),
@@ -71,7 +73,7 @@ class _DadosTagState extends State<DadosTag> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  data["descricao"],
+                  tag.descricao,
                   style: const TextStyle(
                     fontSize: 20,
                   ),
@@ -91,7 +93,7 @@ class _DadosTagState extends State<DadosTag> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  data["dificuldade"],
+                  tag.dificuldade,
                   style: const TextStyle(
                     fontSize: 20,
                   ),
@@ -111,7 +113,7 @@ class _DadosTagState extends State<DadosTag> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  data["culinaria"],
+                  tag.culinaria,
                   style: const TextStyle(
                     fontSize: 20,
                   ),

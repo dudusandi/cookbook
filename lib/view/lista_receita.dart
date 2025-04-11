@@ -1,7 +1,8 @@
+import 'package:flush/model/receita.dart';
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import '../data/banco.dart';
-import 'BuscaReceita.dart';
+import 'busca_receita.dart';
 
 class ListaReceita extends StatefulWidget {
   const ListaReceita({super.key});
@@ -12,8 +13,8 @@ class ListaReceita extends StatefulWidget {
 
 class _ListaReceitaState extends State<ListaReceita> {
   Banco banco = Banco();
-  List<Map<String, dynamic>> receitas = [];
-  List<Map<String, dynamic>> receitasFiltradas = [];
+  List<Receita> receitas = [];
+  List<Receita> receitasFiltradas = [];
   bool _isLoading = true;
   TextEditingController searchController = TextEditingController();
   String searchText = "";
@@ -43,14 +44,17 @@ class _ListaReceitaState extends State<ListaReceita> {
     );
 
     for (var row in results) {
-
-      var receita = {
-        'nome': row[1],
-        'tempoPreparo': row[2],
-        'modoPreparo':row[3],
-        'ingredientes':row[4],
-        'tags': row[5],
-      };
+      Receita receita = Receita(
+        nome: row[1] as String,
+        tempoPreparo: row[2] as String,
+        modoPreparo: row[3] as String,
+        ingredientes: row[4] as String,
+        tags: (row[5] as String)
+        .replaceAll(RegExp(r'[\{\}]'), '')
+        .split(',')
+        .map((e) => e.trim())
+        .toList(),
+      );
       receitas.add(receita);
     }
 
@@ -67,7 +71,7 @@ class _ListaReceitaState extends State<ListaReceita> {
     } else {
       receitasFiltradas = receitas
           .where((receita) =>
-          receita['nome'].toLowerCase().contains(searchText.toLowerCase()))
+              receita.nome.toLowerCase().contains(searchText.toLowerCase()))
           .toList();
     }
   }
@@ -87,7 +91,7 @@ class _ListaReceitaState extends State<ListaReceita> {
           IconButton(
             onPressed: () async {
               Navigator.pushNamed(context, '/cadastro_projeto').then(
-                    (value) => setState(() {
+                (value) => setState(() {
                   value == true ? atualizarListaPesquisas() : null;
                 }),
               );
@@ -96,7 +100,7 @@ class _ListaReceitaState extends State<ListaReceita> {
           ),
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: PesquisaSearch(receitas));
+              showSearch(context: context, delegate: BuscaReceita(receitas));
             },
             icon: const Icon(Icons.search),
           ),
@@ -104,23 +108,23 @@ class _ListaReceitaState extends State<ListaReceita> {
       ),
       body: _isLoading
           ? const Center(
-        child: CircularProgressIndicator(),
-      )
+              child: CircularProgressIndicator(),
+            )
           : ListView.builder(
-        itemCount: receitasFiltradas.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(receitasFiltradas[index]['nome']),
-            onTap: () async {
-              await Navigator.pushNamed(context, '/dadosprojeto',
-                  arguments: receitasFiltradas[index])
-                  .then((value) => setState(() {
-                value == true ? atualizarListaPesquisas() : null;
-              }));
-            },
-          );
-        },
-      ),
+              itemCount: receitasFiltradas.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(receitasFiltradas[index].nome),
+                  onTap: () async {
+                    await Navigator.pushNamed(context, '/dadosprojeto',
+                            arguments: receitasFiltradas[index])
+                        .then((value) => setState(() {
+                              value == true ? atualizarListaPesquisas() : null;
+                            }));
+                  },
+                );
+              },
+            ),
     );
   }
 }

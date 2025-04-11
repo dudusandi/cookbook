@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import '../data/banco.dart';
+import '../model/receita.dart';
 
 class CadastroReceita extends StatefulWidget {
   const CadastroReceita({super.key});
@@ -11,8 +12,6 @@ class CadastroReceita extends StatefulWidget {
 }
 
 class _CadastroReceitaState extends State<CadastroReceita> {
-
-
   final nomeController = TextEditingController();
   final modoPreparoController = TextEditingController();
   final tempoPreparoController = TextEditingController();
@@ -24,8 +23,7 @@ class _CadastroReceitaState extends State<CadastroReceita> {
   List<String> _tags = [];
 
   Future<void> _carregarPesquisadores() async {
-    List<Map<String, dynamic>> pesquisadores =
-    await banco.listarTags();
+    List<Map<String, dynamic>> pesquisadores = await banco.listarTags();
     setState(() {
       _pesquisadores = pesquisadores;
     });
@@ -44,12 +42,15 @@ class _CadastroReceitaState extends State<CadastroReceita> {
         actions: [
           IconButton(
               onPressed: () {
-                banco.salvarProjeto(
-                    nomeController.text,
-                    tempoPreparoController.text,
-                    modoPreparoController.text,
-                    ingredientesController.text,
-                    _tags);
+                final receita = Receita(
+                  nome: nomeController.text,
+                  tempoPreparo: tempoPreparoController.text,
+                  modoPreparo: modoPreparoController.text,
+                  ingredientes: ingredientesController.text,
+                  tags: _tags,
+                );
+
+                banco.salvarReceita(receita);
                 Navigator.pop(context, true);
               },
               icon: const Icon(Icons.save))
@@ -139,7 +140,7 @@ class _CadastroReceitaState extends State<CadastroReceita> {
                 searchable: true,
                 items: _pesquisadores
                     .map((pesquisador) => MultiSelectItem<String>(
-                    pesquisador['nome'], pesquisador['nome']))
+                        pesquisador['nome'], pesquisador['nome']))
                     .toList(),
                 onConfirm: (values) {
                   setState(() {

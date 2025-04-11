@@ -1,9 +1,12 @@
+import 'package:flush/model/tag.dart';
 import 'package:flutter/material.dart';
 
-class PesquisaSearch extends SearchDelegate {
-  final List<Map<String, dynamic>> pesquisas;
+import 'dados_tag.dart';
 
-  PesquisaSearch(this.pesquisas);
+class BuscaTag extends SearchDelegate {
+  final List<Tag> tags;  
+
+  BuscaTag(this.tags);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -29,25 +32,19 @@ class PesquisaSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    final results = pesquisas
-        .where((pesquisa) =>
-        pesquisa['titulo'].toLowerCase().contains(query.toLowerCase()))
+    final results = tags
+        .where((tag) =>
+            tag.nome.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
       itemCount: results.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(results[index]['titulo']),
-          subtitle: Text(results[index]['datainicial']),
-          onTap: () async {
-            await Navigator.pushNamed(context, '/dadosprojeto',
-                arguments: results[index])
-                .then((value) {
-              if (value == true) {
-                close(context, true);
-              }
-            });
+          title: Text(results[index].nome),
+          subtitle: Text(results[index].descricao),
+          onTap: () {
+            close(context, results[index]);
           },
         );
       },
@@ -56,20 +53,24 @@ class PesquisaSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestions = pesquisas
-        .where((pesquisa) =>
-        pesquisa['nome'].toLowerCase().contains(query.toLowerCase()))
+    final suggestions = tags
+        .where((tag) =>
+            tag.nome.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
       itemCount: suggestions.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(suggestions[index]['nome']),
+          title: Text(suggestions[index].nome),
           onTap: () async {
-            await Navigator.pushNamed(context, '/dadosprojeto',
-                arguments: suggestions[index])
-                .then((value) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DadosTag(),
+                settings: RouteSettings(arguments: suggestions[index]),
+              ),
+            ).then((value) {
               if (value == true) {
                 close(context, true);
               }

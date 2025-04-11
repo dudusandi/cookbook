@@ -1,21 +1,22 @@
+import 'package:flush/model/tag.dart';
 import 'package:flutter/material.dart';
 import 'package:flush/view/dados_tag.dart';
 import 'package:postgres/postgres.dart';
 import '../data/banco.dart';
-import 'BuscaTag.dart';
+import 'busca_tag.dart';
 
-class TelaTag extends StatefulWidget {
-  const TelaTag({super.key});
+class ListaTag extends StatefulWidget {
+  const ListaTag({super.key});
 
   @override
-  TelaTagState createState() => TelaTagState();
+  ListaTagState createState() => ListaTagState();
 }
 
-class TelaTagState extends State<TelaTag> {
+class ListaTagState extends State<ListaTag> {
   Banco banco = Banco();
 
-  List<Map<String, dynamic>> tags = [];
-  List<Map<String, dynamic>> tagsFiltradas = [];
+  List<Tag> tags = [];
+  List<Tag> tagsFiltradas = [];
 
   bool _isLoading = true;
   TextEditingController searchController = TextEditingController();
@@ -46,12 +47,12 @@ class TelaTagState extends State<TelaTag> {
     );
 
     for (var row in results) {
-      var tag = {
-        'nome': row[0],
-        'descricao': row[1],
-        'dificuldade': row[2],
-        'culinaria': row[3]
-      };
+      Tag tag = Tag(
+        nome: row[0] as String,
+        descricao: row[1] as String,
+        dificuldade: row[2] as String,
+        culinaria: row[3] as String
+      );
       tags.add(tag);
     }
 
@@ -67,7 +68,7 @@ class TelaTagState extends State<TelaTag> {
       tagsFiltradas = List.from(tags);
     } else {
       tagsFiltradas = tags
-          .where((tag) => tag['nome']
+          .where((tag) => tag.nome
               .toLowerCase()
               .contains(searchText.toLowerCase()))
           .toList();
@@ -95,11 +96,11 @@ class TelaTagState extends State<TelaTag> {
                       atualizarListaTags();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                            content: Text(erroAddPesquisador!.isNotEmpty
+                            content: Text(erroAddTag!.isNotEmpty
                                 ? 'Erro ao Cadastrar'
                                 : 'Tag Cadastrada')),
                       );
-                      erroAddPesquisador = '';
+                      erroAddTag = '';
                     }
                   },
                 ),
@@ -111,7 +112,7 @@ class TelaTagState extends State<TelaTag> {
             onPressed: () {
               showSearch(
                   context: context,
-                  delegate: PesquisadorSearch(tagsFiltradas));
+                  delegate: BuscaTag(tagsFiltradas));
             },
             icon: const Icon(Icons.search),
           ),
@@ -125,8 +126,8 @@ class TelaTagState extends State<TelaTag> {
               itemCount: tags.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(tags[index]['nome']),
-                  subtitle: Text(tags[index]['descricao']),
+                  title: Text(tags[index].nome),
+                  subtitle: Text(tags[index].descricao),
                   onTap: () async {
                     await Navigator.push(
                             context,

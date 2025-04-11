@@ -1,3 +1,4 @@
+import 'package:flush/model/receita.dart';
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
 
@@ -11,8 +12,8 @@ class DadosReceita extends StatefulWidget {
 class _DadosReceitaState extends State<DadosReceita> {
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> data =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+ final Receita receita = ModalRoute.of(context)!.settings.arguments as Receita;
+
 
     Banco banco = Banco();
 
@@ -24,7 +25,7 @@ class _DadosReceitaState extends State<DadosReceita> {
         actions: [
           IconButton(
               onPressed: () async {
-                await banco.removerReceita(data['nome']);
+                await banco.removerReceita(receita.nome);
                 if (context.mounted) {
                   Navigator.pop(context, true);
                 }
@@ -52,9 +53,9 @@ class _DadosReceitaState extends State<DadosReceita> {
                     ),
                   ),
                   Text(
-                    data["nome"],
+                    receita.nome,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                   ),
                 ],
@@ -72,9 +73,9 @@ class _DadosReceitaState extends State<DadosReceita> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    data["tempoPreparo"],
+                    receita.tempoPreparo,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                   ),
                 ],
@@ -92,9 +93,9 @@ class _DadosReceitaState extends State<DadosReceita> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    data["modoPreparo"],
+                    receita.modoPreparo,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                   ),
                 ],
@@ -112,9 +113,9 @@ class _DadosReceitaState extends State<DadosReceita> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    data["ingredientes"],
+                    receita.ingredientes,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                   ),
                 ],
@@ -133,18 +134,12 @@ class _DadosReceitaState extends State<DadosReceita> {
                   const SizedBox(height: 5),
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: data["tags"].split(', ').length,
+                    itemCount: receita.tags.length,
                     itemBuilder: (context, index) {
-                      String tag =
-                          data["tags"].split(', ')[index];
-
-                      tag =
-                          tag.replaceAll(RegExp(r'[\[\]]'), '');
-
                       return Text(
-                        tag,
+                        receita.tags[index],
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 15,
                         ),
                       );
                     },

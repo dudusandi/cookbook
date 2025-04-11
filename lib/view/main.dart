@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         '/cadastro': (context) => const CadastroTag(),
         '/cadastro_projeto': (context) => const CadastroReceita(),
         '/ajustes': (context) => const Ajustes(),
-        '/listapesquisadores': (context) => const TelaTag(),
+        '/listapesquisadores': (context) => const ListaTag(),
         '/dadosprojeto': (context) => const DadosReceita()
       },
     );
@@ -63,7 +63,7 @@ class InicioState extends State<Inicio> {
   final List<Widget> _pages = [
     const HomePage(),
     const ListaReceita(),
-    const TelaTag(),
+    const ListaTag(),
 
   ];
 
