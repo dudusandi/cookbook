@@ -1,6 +1,6 @@
 {
-    "name": "imcflutter",
-    "short_name": "imcflutter",
+    "name": "flush",
+    "short_name": "flush",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

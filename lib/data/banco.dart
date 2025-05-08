@@ -110,7 +110,7 @@ class Banco {
     Connection conn = await conectarbanco();
 
     final results = await conn.execute(
-      Sql.named('SELECT id, nome, tempoPreparo, modoPreparo, ingredientes, tags FROM receitas ORDER BY nome'),
+      Sql.named('SELECT id, nome, tempoPreparo, modoPreparo, ingredientes, tags, imagem FROM receitas ORDER BY nome'),
     );
 
     List<Receita> receitas = [];
@@ -122,7 +122,7 @@ class Banco {
         modoPreparo: row[3] as String,
         ingredientes: row[4] as String,
         tags: (row[5] as String).split(','),
-        imagem: null, // Não carrega a imagem na listagem
+        imagem: row[6] as Uint8List?,
       ));
     }
 
@@ -172,26 +172,33 @@ Future<Uint8List?> carregarImagemReceita(int id) async {
       ''');
     await conn.close();
   }
+Future<void> salvarReceita(Receita receita) async {
+  try {
+    String? hexString;
+    if (receita.imagem != null) {
+      hexString = receita.imagem!.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+    }
 
-  Future<void> salvarReceita(Receita receita) async {
-  Connection conn = await conectarbanco();
-
-  await conn.execute(
-  Sql.named('''
-    INSERT INTO public.receitas (nome, tempoPreparo, modoPreparo, ingredientes, tags, imagem)
-    VALUES (@nome, @tempoPreparo, @modoPreparo, @ingredientes, @tags, @imagem)
-  '''),
-  parameters: {
-    'nome': receita.nome,
-    'tempoPreparo': receita.tempoPreparo,
-    'modoPreparo': receita.modoPreparo,
-    'ingredientes': receita.ingredientes,
-    'tags': receita.tags.join(','),
-    'imagem': receita.imagem,
-  },
-);
-
-  await conn.close();
+    Connection conn = await conectarbanco();
+    await conn.execute(
+      Sql.named('''
+        INSERT INTO public.receitas (nome, tempoPreparo, modoPreparo, ingredientes, tags, imagem)
+        VALUES (@nome, @tempoPreparo, @modoPreparo, @ingredientes, @tags, decode(@imagem, 'hex'))
+      '''),
+      parameters: {
+        'nome': receita.nome,
+        'tempoPreparo': receita.tempoPreparo,
+        'modoPreparo': receita.modoPreparo,
+        'ingredientes': receita.ingredientes,
+        'tags': receita.tags.join(','),
+        'imagem': hexString, // NULL se hexString for null
+      },
+    );
+    await conn.close();
+  } catch (e) {
+    print('Erro ao salvar receita: $e');
+    rethrow;
+  }
 }
 
 

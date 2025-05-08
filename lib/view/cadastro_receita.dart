@@ -28,7 +28,7 @@ class _CadastroReceitaState extends State<CadastroReceita> {
   Future<void> _selecionarImagem() async {
     final XFile? imagemSelecionada = await _picker.pickImage(source: ImageSource.gallery);
     if (imagemSelecionada != null) {
-      // Comprimir a imagem
+
       final bytes = await _comprimirImagem(imagemSelecionada);
       if (bytes != null) {
         setState(() {
@@ -42,20 +42,21 @@ class _CadastroReceitaState extends State<CadastroReceita> {
     }
   }
 
-  Future<Uint8List?> _comprimirImagem(XFile imagem) async {
-    try {
-      final compressedImage = await FlutterImageCompress.compressWithFile(
-        imagem.path,
-        quality: 70, // Qualidade de 0 a 100
-        minWidth: 800, // Largura máxima
-        minHeight: 600, // Altura máxima
-      );
-      return compressedImage;
-    } catch (e) {
-      print('Erro ao comprimir imagem: $e');
-      return null;
-    }
+Future<Uint8List?> _comprimirImagem(XFile imagem) async {
+  try {
+    final compressedImage = await FlutterImageCompress.compressWithFile(
+      imagem.path,
+      format: CompressFormat.jpeg, // Força formato JPEG
+      quality: 70,
+      minWidth: 800,
+      minHeight: 600,
+    );
+    return compressedImage;
+  } catch (e) {
+    print('Erro na compressão: $e');
+    return null;
   }
+}
 
   Future<void> _carregarTags() async {
     try {
