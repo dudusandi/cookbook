@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 class Receita {
   final int? id;
   final String nome;
@@ -5,6 +7,7 @@ class Receita {
   final String ingredientes;
   final String modoPreparo;
   final List<String> tags;
+  final Uint8List? imagem;
 
   Receita({
     this.id,
@@ -13,6 +16,7 @@ class Receita {
     required this.ingredientes,
     required this.modoPreparo,
     required this.tags,
+    required this.imagem,
   });
 
   factory Receita.fromMap(Map<String, dynamic> map) {
@@ -23,6 +27,8 @@ class Receita {
       ingredientes: map['ingredientes'],
       modoPreparo: map['modoPreparo'],
       tags: map['tags'].toString().replaceAll('{', '').replaceAll('}', '').split(','),
+      imagem: map['imagem'],
+      
     );
   }
 
@@ -34,6 +40,7 @@ class Receita {
       'ingredientes': ingredientes,
       'modoPreparo': modoPreparo,
       'tags': tags.join(','),
+      'imagem': imagem,
     };
   }
 }

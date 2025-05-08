@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flush/controller/ajustes_controller.dart';
 import 'package:flush/model/receita.dart';
 import 'package:flush/model/tag.dart';
@@ -72,7 +74,8 @@ class Banco {
     tempoPreparo TEXT,
     modoPreparo TEXT,
     ingredientes TEXT,
-    tags TEXT
+    tags TEXT,
+    imagem BYTEA
     )
     
      ''');
@@ -101,6 +104,65 @@ class Banco {
     await conn.close();
   }
 
+  
+
+  Future<List<Receita>> listarReceitas() async {
+    Connection conn = await conectarbanco();
+
+    final results = await conn.execute(
+      Sql.named('SELECT id, nome, tempoPreparo, modoPreparo, ingredientes, tags FROM receitas ORDER BY nome'),
+    );
+
+    List<Receita> receitas = [];
+    for (var row in results) {
+      receitas.add(Receita(
+        id: row[0] as int,
+        nome: row[1] as String,
+        tempoPreparo: row[2] as String,
+        modoPreparo: row[3] as String,
+        ingredientes: row[4] as String,
+        tags: (row[5] as String).split(','),
+        imagem: null, // Não carrega a imagem na listagem
+      ));
+    }
+
+    await conn.close();
+    return receitas;
+  }
+
+Future<Uint8List?> carregarImagemReceita(int id) async {
+    Connection conn = await conectarbanco();
+
+    final results = await conn.execute(
+      Sql.named('SELECT imagem FROM receitas WHERE id = @id'),
+      parameters: {'id': id},
+    );
+
+    Uint8List? imagem;
+    if (results.isNotEmpty) {
+      imagem = results[0][0] as Uint8List?;
+    }
+
+    await conn.close();
+    return imagem;
+  }
+
+  Future<List<String>> listarTags() async {
+    Connection conn = await conectarbanco();
+
+    final results = await conn.execute(
+      Sql.named('SELECT nome FROM tags ORDER BY nome'),
+    );
+    List<String> tags = [];
+
+    for (var row in results) {
+      tags.add(row[0] as String);
+    }
+
+    await conn.close();
+    return tags;
+  }
+
   Future<void> removerReceita(String nome) async {
     Connection conn = await conectarbanco();
 
@@ -114,28 +176,23 @@ class Banco {
   Future<void> salvarReceita(Receita receita) async {
   Connection conn = await conectarbanco();
 
-  await conn.execute('''
-    INSERT INTO public.receitas (nome, tempoPreparo, modoPreparo, ingredientes, tags)
-    VALUES ('${receita.nome}', '${receita.tempoPreparo}', '${receita.modoPreparo}', '${receita.ingredientes}', '${receita.tags.join(',')}')
-  ''');
+  await conn.execute(
+  Sql.named('''
+    INSERT INTO public.receitas (nome, tempoPreparo, modoPreparo, ingredientes, tags, imagem)
+    VALUES (@nome, @tempoPreparo, @modoPreparo, @ingredientes, @tags, @imagem)
+  '''),
+  parameters: {
+    'nome': receita.nome,
+    'tempoPreparo': receita.tempoPreparo,
+    'modoPreparo': receita.modoPreparo,
+    'ingredientes': receita.ingredientes,
+    'tags': receita.tags.join(','),
+    'imagem': receita.imagem,
+  },
+);
 
   await conn.close();
 }
 
 
-  Future<List<String>> listarTags() async {
-    Connection conn = await conectarbanco();
-
-    final results = await conn.execute(
-      Sql.named('SELECT * FROM tags ORDER BY nome'),
-    );
-    List<String> tags = [];
-
-    for (var row in results) {
-      tags.add(row[0] as String);
-    }
-
-    await conn.close();
-    return tags;
-  }
 }

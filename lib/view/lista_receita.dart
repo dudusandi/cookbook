@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flush/model/receita.dart';
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
@@ -40,20 +42,23 @@ class _ListaReceitaState extends State<ListaReceita> {
     });
 
     final results = await conn.execute(
-      Sql.named('SELECT * FROM receitas ORDER BY nome'),
+      Sql.named(
+          'SELECT nome, tempopreparo, modopreparo, ingredientes, tags, imagem FROM receitas ORDER BY nome'),
     );
 
     for (var row in results) {
       Receita receita = Receita(
-        nome: row[1] as String,
-        tempoPreparo: row[2] as String,
-        modoPreparo: row[3] as String,
-        ingredientes: row[4] as String,
-        tags: (row[5] as String)
-        .replaceAll(RegExp(r'[\{\}]'), '')
-        .split(',')
-        .map((e) => e.trim())
-        .toList(),
+        nome: row[0] as String,
+        tempoPreparo: row[1] as String,
+        modoPreparo: row[2] as String,
+        ingredientes: row[3] as String,
+        tags: (row[4] as String?)
+                ?.replaceAll(RegExp(r'[\{\}]'), '')
+                .split(',')
+                .map((e) => e.trim())
+                .toList() ??
+            [],
+        imagem: row[5] as Uint8List?,
       );
       receitas.add(receita);
     }
@@ -114,6 +119,17 @@ class _ListaReceitaState extends State<ListaReceita> {
               itemCount: receitasFiltradas.length,
               itemBuilder: (context, index) {
                 return ListTile(
+                  leading: receitasFiltradas[index].imagem != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.memory(
+                            receitasFiltradas[index].imagem!,
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : const Icon(Icons.image_not_supported),
                   title: Text(receitasFiltradas[index].nome),
                   onTap: () async {
                     await Navigator.pushNamed(context, '/dadosprojeto',

@@ -10,19 +10,6 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image(
-            image: AssetImage('assets/logoucs.png'),
-            width: 200,
-            height: 200,
-            filterQuality: FilterQuality.high,
-            isAntiAlias: true,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Text(
-              "Livro de Receitas",
-            ),
-          ),
         ],
       ),
     );
