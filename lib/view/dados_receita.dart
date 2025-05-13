@@ -85,7 +85,7 @@ class _DadosReceitaState extends State<DadosReceita> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Modo de Preparo:',
+                    'Ingredientes:',
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey,
@@ -93,7 +93,7 @@ class _DadosReceitaState extends State<DadosReceita> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    receita.modoPreparo,
+                    receita.ingredientes,
                     style: const TextStyle(
                       fontSize: 15,
                     ),
@@ -105,7 +105,7 @@ class _DadosReceitaState extends State<DadosReceita> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Ingredientes:',
+                    'Modo de Preparo:',
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey,
@@ -113,7 +113,7 @@ class _DadosReceitaState extends State<DadosReceita> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    receita.ingredientes,
+                    receita.modoPreparo,
                     style: const TextStyle(
                       fontSize: 15,
                     ),

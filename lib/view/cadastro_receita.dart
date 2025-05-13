@@ -29,10 +29,10 @@ class _CadastroReceitaState extends State<CadastroReceita> {
     final XFile? imagemSelecionada = await _picker.pickImage(source: ImageSource.gallery);
     if (imagemSelecionada != null) {
 
-      final bytes = await _comprimirImagem(imagemSelecionada);
-      if (bytes != null) {
+      final imagem_compactada = await _comprimirImagem(imagemSelecionada);
+      if (imagem_compactada != null) {
         setState(() {
-          _imagem = bytes;
+          _imagem = imagem_compactada;
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -46,12 +46,12 @@ Future<Uint8List?> _comprimirImagem(XFile imagem) async {
   try {
     final compressedImage = await FlutterImageCompress.compressWithFile(
       imagem.path,
-      format: CompressFormat.jpeg, // Força formato JPEG
-      quality: 70,
-      minWidth: 800,
-      minHeight: 600,
+      quality: 60,
     );
-    return compressedImage;
+    if (compressedImage != null) {
+      return Uint8List.fromList(compressedImage);
+    }
+    return null;
   } catch (e) {
     print('Erro na compressão: $e');
     return null;

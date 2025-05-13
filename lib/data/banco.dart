@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flush/controller/ajustes_controller.dart';
@@ -17,6 +18,7 @@ class Banco {
   String? ssl;
   String? port;
   String? portaController;
+  Uint8List? imagembanco;
 
   Future<Connection> conectarbanco() async {
     AjustesController ajustes = AjustesController();
@@ -112,6 +114,7 @@ class Banco {
     final results = await conn.execute(
       Sql.named('SELECT id, nome, tempoPreparo, modoPreparo, ingredientes, tags, imagem FROM receitas ORDER BY nome'),
     );
+    
 
     List<Receita> receitas = [];
     for (var row in results) {
@@ -123,6 +126,7 @@ class Banco {
         ingredientes: row[4] as String,
         tags: (row[5] as String).split(','),
         imagem: row[6] as Uint8List?,
+
       ));
     }
 
@@ -172,18 +176,20 @@ Future<Uint8List?> carregarImagemReceita(int id) async {
       ''');
     await conn.close();
   }
+
 Future<void> salvarReceita(Receita receita) async {
   try {
-    String? hexString;
+    final conn = await conectarbanco();
+    
+    String? imagemBase64;
     if (receita.imagem != null) {
-      hexString = receita.imagem!.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+      imagemBase64 = base64Encode(receita.imagem!);
     }
-
-    Connection conn = await conectarbanco();
+    
     await conn.execute(
       Sql.named('''
         INSERT INTO public.receitas (nome, tempoPreparo, modoPreparo, ingredientes, tags, imagem)
-        VALUES (@nome, @tempoPreparo, @modoPreparo, @ingredientes, @tags, decode(@imagem, 'hex'))
+        VALUES (@nome, @tempoPreparo, @modoPreparo, @ingredientes, @tags, decode(@imagem, 'base64'))
       '''),
       parameters: {
         'nome': receita.nome,
@@ -191,9 +197,10 @@ Future<void> salvarReceita(Receita receita) async {
         'modoPreparo': receita.modoPreparo,
         'ingredientes': receita.ingredientes,
         'tags': receita.tags.join(','),
-        'imagem': hexString, // NULL se hexString for null
+        'imagem': imagemBase64,
       },
     );
+    
     await conn.close();
   } catch (e) {
     print('Erro ao salvar receita: $e');

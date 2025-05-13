@@ -35,18 +35,18 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.6
+  cupertino_icons: 
   postgres:
-  shared_preferences: ^2.2.3
-  mask_text_input_formatter: ^2.9.0
-  date_format: ^2.0.7
-  multiselect_dropdown_flutter: ^0.0.7
-  multi_select_flutter: ^4.1.3
-  intl: ^0.19.0
-  file_picker: ^8.0.5
-  path_provider: ^2.1.3
-  image_picker: ^1.1.2
-  flutter_image_compress: ^2.4.0
+  shared_preferences: 
+  mask_text_input_formatter: 
+  date_format: 
+  multiselect_dropdown_flutter: 
+  multi_select_flutter: 
+  intl: 
+  file_picker: 
+  path_provider: 
+  image_picker: 
+  flutter_image_compress: 
 
 
 dev_dependencies:
@@ -58,7 +58,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
+  flutter_lints: 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
