@@ -63,6 +63,7 @@ class InicioState extends State<Inicio> {
   final List<Widget> _pages = [
     const ListaReceita(),
     const ListaTag(),
+    const Ajustes(),
 
   ];
 
@@ -75,32 +76,26 @@ class InicioState extends State<Inicio> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await Navigator.pushNamed(context, '/ajustes');
-            },
-            icon: const Icon(Icons.settings),
-            color: Colors.white,
-          )
-        ],
-        backgroundColor: const Color.fromARGB(255, 143, 0, 57),
-        title: const Text('CookBook'),
-        foregroundColor: Colors.white,
-      ),
+
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 132, 94, 143),
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.book_rounded),
+            backgroundColor: Colors.white,
+            icon: Icon(Icons.book_rounded, color: Colors.white,),
             label: 'Receitas',
+          
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.tag),
             label: 'Tags',
+          ),
+            BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Ajustes',
           ),
         ],
       ),

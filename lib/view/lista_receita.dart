@@ -84,16 +84,20 @@ class _ListaReceitaState extends State<ListaReceita> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 238, 252),
       appBar: AppBar(
-        title: const Text('Receitas'),
+        backgroundColor: const Color.fromARGB(255, 132, 94, 143),
+        title: const Text('Receitas', style: TextStyle(color: Colors.white, fontSize: 24)),
         actions: [
           IconButton(
+             color: Colors.white,
             onPressed: () {
               atualizarListaPesquisas();
             },
             icon: const Icon(Icons.refresh),
           ),
           IconButton(
+            color: Colors.white,
             onPressed: () async {
               Navigator.pushNamed(context, '/cadastro_projeto').then(
                 (value) => setState(() {
@@ -104,6 +108,7 @@ class _ListaReceitaState extends State<ListaReceita> {
             icon: const Icon(Icons.add),
           ),
           IconButton(
+             color: Colors.white,
             onPressed: () {
               showSearch(context: context, delegate: BuscaReceita(receitas));
             },
@@ -111,16 +116,31 @@ class _ListaReceitaState extends State<ListaReceita> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemCount: receitasFiltradas.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: receitasFiltradas[index].imagem != null
-                      ? ClipRRect(
+    
+body: _isLoading
+    ? const Center(
+        child: CircularProgressIndicator(),
+      )
+    : Padding(
+        padding: const EdgeInsets.only(top: 16.0, left: 10, right: 10), // Margem no topo da lista
+        child: ListView.builder(
+          itemCount: receitasFiltradas.length,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0), // Margem para cada item
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: const Color.fromARGB(255, 255, 182, 219) ?? Colors.pink, // Cor da linha
+                    width: 1.0, // Espessura da linha
+                  ),
+                ),
+              ),
+              child: ListTile(
+                leading: receitasFiltradas[index].imagem != null
+                    ? Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image.memory(
                             receitasFiltradas[index].imagem!,
@@ -128,19 +148,37 @@ class _ListaReceitaState extends State<ListaReceita> {
                             height: 60,
                             fit: BoxFit.cover,
                           ),
-                        )
-                      : const Icon(Icons.image_not_supported),
-                  title: Text(receitasFiltradas[index].nome),
-                  onTap: () async {
-                    await Navigator.pushNamed(context, '/dadosprojeto',
-                            arguments: receitasFiltradas[index])
-                        .then((value) => setState(() {
-                              value == true ? atualizarListaPesquisas() : null;
-                            }));
-                  },
-                );
-              },
-            ),
+                        ),
+                      )
+                    : SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: Icon(
+                          Icons.image_not_supported,
+                          size: 40,
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
+                title: Text(
+                  receitasFiltradas[index].nome,
+                  style: TextStyle(fontSize: 20, color: Colors.pink[900]),
+                ),
+                subtitle: Text(
+                  receitasFiltradas[index].tempoPreparo?.toString() ?? 'Tempo não informado',
+                  style: TextStyle(fontSize: 16, color: Colors.pink[700]),
+                ),
+                onTap: () async {
+                  await Navigator.pushNamed(context, '/dadosprojeto',
+                          arguments: receitasFiltradas[index])
+                      .then((value) => setState(() {
+                            value == true ? atualizarListaPesquisas() : null;
+                          }));
+                },
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }
