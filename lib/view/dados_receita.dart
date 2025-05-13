@@ -12,8 +12,8 @@ class DadosReceita extends StatefulWidget {
 class _DadosReceitaState extends State<DadosReceita> {
   @override
   Widget build(BuildContext context) {
- final Receita receita = ModalRoute.of(context)!.settings.arguments as Receita;
-
+    final Receita receita =
+        ModalRoute.of(context)!.settings.arguments as Receita;
 
     Banco banco = Banco();
 
@@ -40,22 +40,30 @@ class _DadosReceitaState extends State<DadosReceita> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(200),
+                  child: Image.memory(
+                    receita.imagem!,
+                    width: 200, // Você pode ajustar o tamanho
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
               const SizedBox(height: 5),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Nome:',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Text(
-                    receita.nome,
-                    style: const TextStyle(
-                      fontSize: 15,
+                  const SizedBox(height: 20),
+
+                  Center(
+                    child: Text(
+                      receita.nome,
+                      style: const TextStyle(
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ],
@@ -63,6 +71,7 @@ class _DadosReceitaState extends State<DadosReceita> {
               const SizedBox(height: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Text(
                     'Tempo de Preparo:',
@@ -146,6 +155,7 @@ class _DadosReceitaState extends State<DadosReceita> {
                   ),
                 ],
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

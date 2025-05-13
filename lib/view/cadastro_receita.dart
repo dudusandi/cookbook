@@ -107,7 +107,7 @@ Future<Uint8List?> _comprimirImagem(XFile imagem) async {
         ],
         title: const Text('Nova Receita'),
         foregroundColor: Colors.white,
-        backgroundColor: const Color(0xff004c9e),
+        backgroundColor: const Color.fromARGB(255, 143, 0, 57),
       ),
       body: SingleChildScrollView(
         child: Padding(

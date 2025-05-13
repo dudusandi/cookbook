@@ -61,7 +61,6 @@ class InicioState extends State<Inicio> {
   }
 
   final List<Widget> _pages = [
-    const HomePage(),
     const ListaReceita(),
     const ListaTag(),
 
@@ -95,10 +94,6 @@ class InicioState extends State<Inicio> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Início',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book_rounded),
             label: 'Receitas',
