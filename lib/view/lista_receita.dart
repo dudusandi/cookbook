@@ -131,8 +131,8 @@ body: _isLoading
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: const Color.fromARGB(255, 255, 182, 219) ?? Colors.pink, // Cor da linha
-                    width: 1.0, // Espessura da linha
+                    color: const Color.fromARGB(255, 255, 182, 219), 
+                    width: 0.5, // Espessura da linha
                   ),
                 ),
               ),

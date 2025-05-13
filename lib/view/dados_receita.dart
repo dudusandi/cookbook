@@ -19,9 +19,9 @@ class _DadosReceitaState extends State<DadosReceita> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalhes'),
+        title: Text(receita.nome),
         foregroundColor: Colors.white,
-        backgroundColor: const Color(0xff004c9e),
+        backgroundColor: Color.fromARGB(255, 132, 94, 143),
         actions: [
           IconButton(
               onPressed: () async {
@@ -43,29 +43,25 @@ class _DadosReceitaState extends State<DadosReceita> {
               Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(200),
-                  child: Image.memory(
-                    receita.imagem!,
-                    width: 200, // Você pode ajustar o tamanho
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
+                  child: receita.imagem != null
+                      ? Image.memory(
+                          receita.imagem!,
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        )
+                      : Icon(
+                          Icons.image_not_supported,
+                          size: 150,
+                          color: Colors.grey,
+                        ),
                 ),
               ),
-              const SizedBox(height: 5),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
-
-                  Center(
-                    child: Text(
-                      receita.nome,
-                      style: const TextStyle(
-                        fontSize: 30,
-                      ),
-                    ),
-                  ),
+                  const SizedBox(height: 5),
                 ],
               ),
               const SizedBox(height: 20),
