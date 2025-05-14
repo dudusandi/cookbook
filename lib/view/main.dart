@@ -84,8 +84,7 @@ class InicioState extends State<Inicio> {
         unselectedItemColor: Colors.white70,
         items: const [
           BottomNavigationBarItem(
-            backgroundColor: Colors.white,
-            icon: Icon(Icons.book_rounded, color: Colors.white,),
+            icon: Icon(Icons.book_rounded),
             label: 'Receitas',
           ),
           BottomNavigationBarItem(
