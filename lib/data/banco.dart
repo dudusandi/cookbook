@@ -52,21 +52,71 @@ class Banco {
 
   Future<void> salvarTag(Tag tag) async {
     final db = await database;
-    await db.insert(
+    
+    // Verifica se a tag já existe
+    final List<Map<String, dynamic>> tags = await db.query(
       'tags',
-      {
-        'nome': tag.nome,
-        'descricao': tag.descricao,
-        'dificuldade': tag.dificuldade,
-        'culinaria': tag.culinaria,
-        'categoria': tag.categoria,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      where: 'descricao = ?',
+      whereArgs: [tag.descricao],
     );
+
+    final Map<String, dynamic> tagData = {
+      'nome': tag.nome,
+      'descricao': tag.descricao,
+      'dificuldade': tag.dificuldade,
+      'culinaria': tag.culinaria,
+      'categoria': tag.categoria,
+    };
+
+    if (tags.isEmpty) {
+      // Se não existe, insere como nova tag
+      await db.insert('tags', tagData);
+    } else {
+      // Se existe, atualiza a tag existente
+      await db.update(
+        'tags',
+        tagData,
+        where: 'descricao = ?',
+        whereArgs: [tag.descricao],
+      );
+
+      // Atualiza as receitas que usam esta tag
+      final List<Map<String, dynamic>> receitas = await db.query('receitas');
+      for (var receita in receitas) {
+        List<String> tagsReceita = (receita['tags'] as String).split(',');
+        if (tagsReceita.contains(tags[0]['nome'])) {
+          // Substitui o nome antigo da tag pelo novo
+          tagsReceita = tagsReceita.map((t) => t == tags[0]['nome'] ? tag.nome : t).toList();
+          
+          await db.update(
+            'receitas',
+            {'tags': tagsReceita.join(',')},
+            where: 'id = ?',
+            whereArgs: [receita['id']],
+          );
+        }
+      }
+    }
   }
 
   Future<void> removerTag(String nome) async {
     final db = await database;
+    
+    final List<Map<String, dynamic>> receitas = await db.query('receitas');
+    for (var receita in receitas) {
+      List<String> tagsReceita = (receita['tags'] as String).split(',');
+      if (tagsReceita.contains(nome)) {
+        tagsReceita.remove(nome);
+        
+        await db.update(
+          'receitas',
+          {'tags': tagsReceita.join(',')},
+          where: 'id = ?',
+          whereArgs: [receita['id']],
+        );
+      }
+    }
+
     await db.delete(
       'tags',
       where: 'nome = ?',
@@ -145,7 +195,7 @@ class Banco {
         'tempoPreparo': receita.tempoPreparo,
         'modoPreparo': receita.modoPreparo,
         'ingredientes': receita.ingredientes,
-        'tags': receita.tags.join(','),
+        'tags': receita.tags.isEmpty ? '' : receita.tags.join(','),
         if (receita.imagem != null) 'imagem': receita.imagem,
       },
       where: 'id = ?',
