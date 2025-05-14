@@ -21,6 +21,48 @@ class ListaTagState extends State<ListaTag> {
   TextEditingController searchController = TextEditingController();
   String searchText = "";
 
+  IconData _getIconForCategory(String categoria) {
+    switch (categoria.toLowerCase()) {
+      case 'almoço':
+        return Icons.lunch_dining;
+      case 'jantar':
+        return Icons.dinner_dining;
+      case 'café da manhã':
+        return Icons.breakfast_dining;
+      case 'lanche':
+        return Icons.cake;
+      case 'sobremesa':
+        return Icons.icecream;
+      case 'aperitivo':
+        return Icons.wine_bar;
+      case 'bebida':
+        return Icons.local_drink;
+      default:
+        return Icons.restaurant;
+    }
+  }
+
+  Color _getColorForCategory(String categoria) {
+    switch (categoria.toLowerCase()) {
+      case 'almoço':
+        return Colors.orange.shade300;
+      case 'jantar':
+        return Colors.purple.shade300;
+      case 'café da manhã':
+        return Colors.yellow.shade300;
+      case 'lanche':
+        return Colors.pink.shade300;
+      case 'sobremesa':
+        return Colors.red.shade300;
+      case 'aperitivo':
+        return Colors.green.shade300;
+      case 'bebida':
+        return Colors.blue.shade300;
+      default:
+        return Colors.grey.shade300;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -116,27 +158,90 @@ class ListaTagState extends State<ListaTag> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : ListView.builder(
+          : GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1.5,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
               itemCount: tags.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(tags[index].nome),
-                  subtitle: Text(tags[index].categoria),
-                  onTap: () async {
-                    await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const DadosTag(),
-                                settings: RouteSettings(
-                                    arguments: tags[index])))
-                        .then(
-                      (value) => setState(() {
-                        if (value == true) {
-                          atualizarListaTags();
-                        }
-                      }),
-                    );
-                  },
+                final tag = tags[index];
+                final icon = _getIconForCategory(tag.categoria);
+                final color = _getColorForCategory(tag.categoria);
+                
+                return Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DadosTag(),
+                          settings: RouteSettings(arguments: tag),
+                        ),
+                      ).then(
+                        (value) => setState(() {
+                          if (value == true) {
+                            atualizarListaTags();
+                          }
+                        }),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(15),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            color,
+                            color.withOpacity(0.7),
+                          ],
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              icon,
+                              size: 32,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              tag.nome,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              tag.categoria,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 12,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),

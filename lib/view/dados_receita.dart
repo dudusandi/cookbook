@@ -11,167 +11,191 @@ class DadosReceita extends StatefulWidget {
 }
 
 class _DadosReceitaState extends State<DadosReceita> {
+  final Color _corPrincipal = const Color.fromARGB(255, 147, 49, 49);
+
   @override
   Widget build(BuildContext context) {
-    final Receita receita =
-        ModalRoute.of(context)!.settings.arguments as Receita;
-
-    print('DadosReceita - ID da receita: ${receita.id}');
-    print('DadosReceita - Nome da receita: ${receita.nome}');
-
-    Banco banco = Banco();
+    final Receita receita = ModalRoute.of(context)!.settings.arguments as Receita;
+    final Banco _banco = Banco();
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 253, 243, 243),
       appBar: AppBar(
         title: Text(receita.nome),
         foregroundColor: Colors.white,
-        backgroundColor: const Color.fromARGB(255, 147, 49, 49),
+        backgroundColor: _corPrincipal,
         actions: [
           IconButton(
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditarReceita(receita: receita),
-                  ),
-                );
-                if (result == true && context.mounted) {
-                  Navigator.pop(context, true);
-                }
-              },
-              icon: const Icon(Icons.edit)),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditarReceita(receita: receita),
+                ),
+              );
+              if (result == true && context.mounted) {
+                Navigator.pop(context, true);
+              }
+            },
+            icon: const Icon(Icons.edit),
+          ),
           IconButton(
-              onPressed: () async {
-                await banco.removerReceita(receita.nome);
-                if (context.mounted) {
-                  Navigator.pop(context, true);
-                }
-              },
-              icon: const Icon(Icons.delete))
+            onPressed: () async {
+              await _banco.removerReceita(receita.nome);
+              if (context.mounted) {
+                Navigator.pop(context, true);
+              }
+            },
+            icon: const Icon(Icons.delete),
+          ),
         ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(200),
-                  child: receita.imagem != null
-                      ? Image.memory(
-                          receita.imagem!,
-                          width: 150,
-                          height: 150,
-                          fit: BoxFit.cover,
-                        )
-                      : Icon(
-                          Icons.image_not_supported,
-                          size: 150,
-                          color: Colors.grey,
-                        ),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: _corPrincipal.withOpacity(0.1),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  SizedBox(height: 5),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: receita.imagem != null
+                        ? Image.memory(
+                            receita.imagem!,
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
+                        : Container(
+                            height: 200,
+                            width: double.infinity,
+                            color: Colors.grey[300],
+                            child: Icon(
+                              Icons.image_not_supported,
+                              size: 80,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Column(
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Tempo de Preparo:',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
+                  _buildInfoCard(
+                    'Tempo de Preparo',
                     receita.tempoPreparo,
-                    style: const TextStyle(
-                      fontSize: 15,
-                    ),
+                    Icons.timer,
+                    _corPrincipal,
                   ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Ingredientes:',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
+                  const SizedBox(height: 16),
+                  _buildInfoCard(
+                    'Ingredientes',
                     receita.ingredientes,
-                    style: const TextStyle(
-                      fontSize: 15,
-                    ),
+                    Icons.shopping_basket,
+                    _corPrincipal,
                   ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Modo de Preparo:',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
+                  const SizedBox(height: 16),
+                  _buildInfoCard(
+                    'Modo de Preparo',
                     receita.modoPreparo,
-                    style: const TextStyle(
-                      fontSize: 15,
+                    Icons.menu_book,
+                    _corPrincipal,
+                  ),
+                  const SizedBox(height: 16),
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.tag, color: _corPrincipal, size: 20),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Tags',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: receita.tags.map((tag) {
+                              return Chip(
+                                label: Text(tag),
+                                backgroundColor: _corPrincipal.withOpacity(0.1),
+                                labelStyle: TextStyle(color: _corPrincipal),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Tags:',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey,
-                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoCard(String title, String content, IconData icon, Color color) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: color, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(height: 5),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: receita.tags.length,
-                    itemBuilder: (context, index) {
-                      return Text(
-                        receita.tags[index],
-                        style: const TextStyle(
-                          fontSize: 15,
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              content,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
-              const SizedBox(height: 20),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -22,6 +22,9 @@ class _EditarReceitaState extends State<EditarReceita> {
   late List<String> _tags;
   Uint8List? _imagem;
   final Banco _banco = Banco();
+  List<String> _todasTags = [];
+  List<String> _tagsSelecionadas = [];
+  final Color _corPrincipal = const Color.fromARGB(255, 147, 49, 49);
 
   @override
   void initState() {
@@ -32,6 +35,26 @@ class _EditarReceitaState extends State<EditarReceita> {
     _modoPreparoController = TextEditingController(text: widget.receita.modoPreparo);
     _tags = List.from(widget.receita.tags);
     _imagem = widget.receita.imagem;
+    _carregarTags();
+  }
+
+  Future<void> _carregarTags() async {
+    try {
+      final tags = await _banco.listarTags();
+      setState(() {
+        _todasTags = tags;
+        _tagsSelecionadas = List.from(_tags);
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro ao carregar tags: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -60,134 +83,261 @@ class _EditarReceitaState extends State<EditarReceita> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Editar Receita'),
-        backgroundColor: const Color.fromARGB(255, 132, 94, 143),
+        backgroundColor: _corPrincipal,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                try {
+                  final receitaAtualizada = Receita(
+                    id: widget.receita.id,
+                    nome: _nomeController.text,
+                    tempoPreparo: _tempoPreparoController.text,
+                    ingredientes: _ingredientesController.text,
+                    modoPreparo: _modoPreparoController.text,
+                    tags: _tagsSelecionadas,
+                    imagem: _imagem,
+                  );
+
+                  await _banco.atualizarReceita(receitaAtualizada);
+                  
+                  if (mounted) {
+                    Navigator.pop(context, true);
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Erro ao atualizar receita: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              }
+            },
+            icon: const Icon(Icons.save),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: GestureDetector(
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: _corPrincipal.withOpacity(0.1),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
+              ),
+              child: Column(
+                children: [
+                  GestureDetector(
                     onTap: _selecionarImagem,
-                    child: CircleAvatar(
-                      radius: 75,
-                      backgroundColor: Colors.grey[200],
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
                       child: _imagem != null
-                          ? ClipOval(
-                              child: Image.memory(
-                                _imagem!,
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.cover,
-                              ),
+                          ? Image.memory(
+                              _imagem!,
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
                             )
-                          : const Icon(Icons.add_a_photo, size: 50),
+                          : Container(
+                              height: 200,
+                              width: double.infinity,
+                              color: Colors.grey[300],
+                              child: Icon(
+                                Icons.add_a_photo,
+                                size: 80,
+                                color: Colors.grey[600],
+                              ),
+                            ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _nomeController,
-                  decoration: const InputDecoration(labelText: 'Nome da Receita'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira o nome da receita';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: _tempoPreparoController,
-                  decoration: const InputDecoration(labelText: 'Tempo de Preparo'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira o tempo de preparo';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: _ingredientesController,
-                  decoration: const InputDecoration(labelText: 'Ingredientes'),
-                  maxLines: 5,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira os ingredientes';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: _modoPreparoController,
-                  decoration: const InputDecoration(labelText: 'Modo de Preparo'),
-                  maxLines: 5,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira o modo de preparo';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        print('ID da receita original: ${widget.receita.id}');
-                        final receitaAtualizada = Receita(
-                          id: widget.receita.id,
-                          nome: _nomeController.text,
-                          tempoPreparo: _tempoPreparoController.text,
-                          ingredientes: _ingredientesController.text,
-                          modoPreparo: _modoPreparoController.text,
-                          tags: _tags,
-                          imagem: _imagem,
-                        );
-                        print('Dados da receita a ser atualizada:');
-                        print('ID: ${receitaAtualizada.id}');
-                        print('Nome: ${receitaAtualizada.nome}');
-                        print('Tempo: ${receitaAtualizada.tempoPreparo}');
-                        print('Ingredientes: ${receitaAtualizada.ingredientes}');
-                        print('Modo: ${receitaAtualizada.modoPreparo}');
-                        print('Tags: ${receitaAtualizada.tags}');
-                        print('Tem imagem: ${receitaAtualizada.imagem != null}');
-
-                        await _banco.atualizarReceita(receitaAtualizada);
-                        print('Receita atualizada com sucesso');
-                        
-                        if (mounted) {
-                          Navigator.pop(context, true);
-                        }
-                      } catch (e) {
-                        print('Erro ao atualizar receita: $e');
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Erro ao atualizar receita: $e'),
-                              backgroundColor: Colors.red,
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildFormCard(
+                      'Nome da Receita',
+                      TextFormField(
+                        controller: _nomeController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, insira o nome da receita';
+                          }
+                          return null;
+                        },
+                      ),
+                      Icons.label,
+                      _corPrincipal,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildFormCard(
+                      'Tempo de Preparo',
+                      TextFormField(
+                        controller: _tempoPreparoController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, insira o tempo de preparo';
+                          }
+                          return null;
+                        },
+                      ),
+                      Icons.timer,
+                      _corPrincipal,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildFormCard(
+                      'Ingredientes',
+                      TextFormField(
+                        controller: _ingredientesController,
+                        maxLines: 3,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, insira os ingredientes';
+                          }
+                          return null;
+                        },
+                      ),
+                      Icons.shopping_basket,
+                      _corPrincipal,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildFormCard(
+                      'Modo de Preparo',
+                      TextFormField(
+                        controller: _modoPreparoController,
+                        maxLines: 5,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, insira o modo de preparo';
+                          }
+                          return null;
+                        },
+                      ),
+                      Icons.menu_book,
+                      _corPrincipal,
+                    ),
+                    const SizedBox(height: 16),
+                    Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.tag, color: _corPrincipal, size: 20),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Tags',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                             ),
-                          );
-                        }
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 132, 94, 143),
-                    foregroundColor: Colors.white,
+                            const SizedBox(height: 16),
+                            if (_todasTags.isEmpty)
+                              const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            else
+                              Wrap(
+                                spacing: 8.0,
+                                runSpacing: 8.0,
+                                children: _todasTags.map((tag) {
+                                  final isSelected = _tagsSelecionadas.contains(tag);
+                                  return FilterChip(
+                                    label: Text(tag),
+                                    selected: isSelected,
+                                    onSelected: (selected) {
+                                      setState(() {
+                                        if (selected) {
+                                          _tagsSelecionadas.add(tag);
+                                        } else {
+                                          _tagsSelecionadas.remove(tag);
+                                        }
+                                      });
+                                    },
+                                    selectedColor: _corPrincipal,
+                                    checkmarkColor: Colors.white,
+                                    backgroundColor: Colors.grey[200],
+                                  );
+                                }).toList(),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFormCard(String title, Widget formField, IconData icon, Color color) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: color, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
                   ),
-                  child: const Text('Salvar Alterações'),
                 ),
               ],
             ),
-          ),
+            const SizedBox(height: 8),
+            formField,
+          ],
         ),
       ),
     );
