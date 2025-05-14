@@ -1,4 +1,4 @@
-import 'package:flush/model/tag.dart';
+import 'package:cookbook/model/tag.dart';
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
 
@@ -114,6 +114,26 @@ class _DadosTagState extends State<DadosTag> {
                 const SizedBox(height: 5),
                 Text(
                   tag.culinaria,
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Categoria:',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  tag.categoria,
                   style: const TextStyle(
                     fontSize: 20,
                   ),

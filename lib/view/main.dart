@@ -1,6 +1,5 @@
-import 'package:flush/view/dados_receita.dart';
+import 'package:cookbook/view/dados_receita.dart';
 import 'package:flutter/material.dart';
-import 'package:flush/view/ajustes.dart';
 import '../data/banco.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'cadastro_tag.dart';
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
         '/detalhes': (context) => const DadosTag(),
         '/cadastro': (context) => const CadastroTag(),
         '/cadastro_projeto': (context) => const CadastroReceita(),
-        '/ajustes': (context) => const Ajustes(),
         '/listapesquisadores': (context) => const ListaTag(),
         '/dadosprojeto': (context) => const DadosReceita()
       },
@@ -62,7 +60,6 @@ class InicioState extends State<Inicio> {
   final List<Widget> _pages = [
     const ListaReceita(),
     const ListaTag(),
-    const Ajustes(),
 
   ];
 
@@ -94,10 +91,6 @@ class InicioState extends State<Inicio> {
           BottomNavigationBarItem(
             icon: Icon(Icons.tag),
             label: 'Tags',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Ajustes',
           ),
         ],
       ),

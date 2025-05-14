@@ -1,4 +1,4 @@
-import 'package:flush/model/receita.dart';
+import 'package:cookbook/model/receita.dart';
 import 'package:flutter/material.dart';
 
 class BuscaReceita extends SearchDelegate {

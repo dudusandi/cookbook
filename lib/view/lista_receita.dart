@@ -1,8 +1,5 @@
-import 'dart:typed_data';
-
-import 'package:flush/model/receita.dart';
+import 'package:cookbook/model/receita.dart';
 import 'package:flutter/material.dart';
-import 'package:postgres/postgres.dart';
 import '../data/banco.dart';
 import 'busca_receita.dart';
 
@@ -34,38 +31,13 @@ class _ListaReceitaState extends State<ListaReceita> {
   }
 
   Future<void> atualizarListaPesquisas() async {
-    Connection conn = await banco.conectarbanco();
-
     setState(() {
       receitas.clear();
       _isLoading = true;
     });
 
-    final results = await conn.execute(
-      Sql.named(
-          'SELECT id, nome, tempopreparo, modopreparo, ingredientes, tags, imagem FROM receitas ORDER BY nome'),
-    );
-
-    for (var row in results) {
-      Receita receita = Receita(
-        id: row[0] as int,
-        nome: row[1] as String,
-        tempoPreparo: row[2] as String,
-        modoPreparo: row[3] as String,
-        ingredientes: row[4] as String,
-        tags: (row[5] as String?)
-                ?.replaceAll(RegExp(r'[\{\}]'), '')
-                .split(',')
-                .map((e) => e.trim())
-                .toList() ??
-            [],
-        imagem: row[6] as Uint8List?,
-      );
-      print('ListaReceita - Receita carregada - ID: ${receita.id}, Nome: ${receita.nome}');
-      receitas.add(receita);
-    }
-
-    await conn.close();
+    receitas = await banco.listarReceitas();
+    
     filtrarReceitas();
     setState(() {
       _isLoading = false;
@@ -118,74 +90,73 @@ class _ListaReceitaState extends State<ListaReceita> {
           ),
         ],
       ),
-    
-body: _isLoading
-    ? const Center(
-        child: CircularProgressIndicator(),
-      )
-    : Padding(
-        padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4),
-        child: ListView.builder(
-          itemCount: receitasFiltradas.length,
-          itemBuilder: (context, index) {
-            return Container(
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0), 
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: const Color.fromARGB(255, 255, 185, 185), 
-                    width: 0.5, 
-                  ),
-                ),
-              ),
-              child: ListTile(
-                leading: receitasFiltradas[index].imagem != null
-                    ? Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.memory(
-                            receitasFiltradas[index].imagem!,
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )
-                    : SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: Icon(
-                          Icons.image_not_supported,
-                          size: 40,
-                          color: const Color.fromARGB(255, 255, 255, 255),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4),
+              child: ListView.builder(
+                itemCount: receitasFiltradas.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: const Color.fromARGB(255, 255, 185, 185),
+                          width: 0.5,
                         ),
                       ),
-                title: Text(
-                  receitasFiltradas[index].nome,
-                  style: TextStyle(fontSize: 20, color: const Color.fromARGB(255, 72, 28, 28)),
-                ),
-                subtitle: Text(
-                  receitasFiltradas[index].tempoPreparo.toString(),
-                  style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 193, 175, 175)),
-                ),
-                onTap: () async {
-                  final result = await Navigator.pushNamed(
-                    context,
-                    '/dadosprojeto',
-                    arguments: receitasFiltradas[index],
+                    ),
+                    child: ListTile(
+                      leading: receitasFiltradas[index].imagem != null
+                          ? Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.memory(
+                                  receitasFiltradas[index].imagem!,
+                                  width: 60,
+                                  height: 60,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          : SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: Icon(
+                                Icons.image_not_supported,
+                                size: 40,
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                      title: Text(
+                        receitasFiltradas[index].nome,
+                        style: TextStyle(fontSize: 20, color: const Color.fromARGB(255, 72, 28, 28)),
+                      ),
+                      subtitle: Text(
+                        receitasFiltradas[index].tempoPreparo.toString(),
+                        style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 193, 175, 175)),
+                      ),
+                      onTap: () async {
+                        final result = await Navigator.pushNamed(
+                          context,
+                          '/dadosprojeto',
+                          arguments: receitasFiltradas[index],
+                        );
+                        
+                        if (result == true) {
+                          print('Atualizando lista após edição/remoção');
+                          await atualizarListaPesquisas();
+                        }
+                      },
+                    ),
                   );
-                  
-                  if (result == true) {
-                    print('Atualizando lista após edição/remoção');
-                    await atualizarListaPesquisas();
-                  }
                 },
               ),
-            );
-          },
-        ),
-      ),
+            ),
     );
   }
 }

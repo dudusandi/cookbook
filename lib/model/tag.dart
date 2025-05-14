@@ -3,12 +3,14 @@ class Tag {
   final String descricao;
   final String dificuldade;
   final String culinaria;
+  final String categoria;
 
   Tag({
     required this.nome,
     required this.descricao,
     required this.dificuldade,
     required this.culinaria,
+    required this.categoria,
   });
 
   factory Tag.fromMap(Map<String, dynamic> map) {
@@ -17,6 +19,7 @@ class Tag {
       descricao: map['descricao'],
       dificuldade: map['dificuldade'],
       culinaria: map['culinaria'],
+      categoria: map['categoria'],
     );
   }
 
@@ -26,6 +29,7 @@ class Tag {
       'descricao': descricao,
       'dificuldade': dificuldade,
       'culinaria': culinaria,
+      'categoria': categoria,
     };
   }
 }

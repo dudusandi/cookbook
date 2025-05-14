@@ -1,5 +1,5 @@
-name: flush
-description: "A new Flutter project."
+name: cookbook
+description: "Livro de Receitas"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -36,7 +36,6 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 
-  postgres:
   shared_preferences: 
   mask_text_input_formatter: 
   date_format: 
@@ -47,6 +46,8 @@ dependencies:
   path_provider: 
   image_picker: 
   flutter_image_compress: 
+  sqflite: 
+  path: 
 
 
 dev_dependencies:

@@ -1,7 +1,6 @@
-import 'package:flush/model/tag.dart';
+import 'package:cookbook/model/tag.dart';
 import 'package:flutter/material.dart';
-import 'package:flush/view/dados_tag.dart';
-import 'package:postgres/postgres.dart';
+import 'package:cookbook/view/dados_tag.dart';
 import '../data/banco.dart';
 import 'busca_tag.dart';
 
@@ -35,28 +34,24 @@ class ListaTagState extends State<ListaTag> {
   }
 
   Future<void> atualizarListaTags() async {
-    Connection conn = await banco.conectarbanco();
-
     setState(() {
       tags.clear();
       _isLoading = true;
     });
 
-    final results = await conn.execute(
-      Sql.named('SELECT * FROM tags ORDER BY nome'),
-    );
+    final db = await banco.database;
+    final List<Map<String, dynamic>> maps = await db.query('tags', orderBy: 'nome');
 
-    for (var row in results) {
-      Tag tag = Tag(
-        nome: row[0] as String,
-        descricao: row[1] as String,
-        dificuldade: row[2] as String,
-        culinaria: row[3] as String
+    tags = List.generate(maps.length, (i) {
+      return Tag(
+        nome: maps[i]['nome'] as String,
+        descricao: maps[i]['descricao'] as String,
+        dificuldade: maps[i]['dificuldade'] as String,
+        culinaria: maps[i]['culinaria'] as String,
+        categoria: maps[i]['categoria'] as String,
       );
-      tags.add(tag);
-    }
+    });
 
-    await conn.close();
     filtrarTags();
     setState(() {
       _isLoading = false;
@@ -98,12 +93,8 @@ class ListaTagState extends State<ListaTag> {
                     if (value == true) {
                       atualizarListaTags();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(erroAddTag!.isNotEmpty
-                                ? 'Erro ao Cadastrar'
-                                : 'Tag Cadastrada')),
+                        const SnackBar(content: Text('Tag Cadastrada')),
                       );
-                      erroAddTag = '';
                     }
                   },
                 ),
@@ -130,6 +121,7 @@ class ListaTagState extends State<ListaTag> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(tags[index].nome),
+                  subtitle: Text(tags[index].categoria),
                   onTap: () async {
                     await Navigator.push(
                             context,

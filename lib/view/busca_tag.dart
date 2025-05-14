@@ -1,4 +1,4 @@
-import 'package:flush/model/tag.dart';
+import 'package:cookbook/model/tag.dart';
 import 'package:flutter/material.dart';
 
 import 'dados_tag.dart';

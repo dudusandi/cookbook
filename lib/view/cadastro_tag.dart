@@ -1,6 +1,5 @@
-import 'package:flush/model/tag.dart';
+import 'package:cookbook/model/tag.dart';
 import 'package:flutter/material.dart';
-import 'package:flush/view/ajustes.dart';
 import '../data/banco.dart';
 
 class CadastroTag extends StatefulWidget {
@@ -9,8 +8,6 @@ class CadastroTag extends StatefulWidget {
   @override
   CadastroTagState createState() => CadastroTagState();
 }
-
-AjustesState ajustesState = AjustesState();
 
 class CadastroTagState extends State<CadastroTag> {
   Banco banco = Banco();
@@ -22,6 +19,7 @@ class CadastroTagState extends State<CadastroTag> {
 
   String _dificuldadeSelecionado = 'Escolha';
   String _culinariaSelecionada = 'Escolha';
+  String _categoriaSelecionada = 'Escolha';
 
   final _nomeController = TextEditingController();
   final _descricaoController = TextEditingController();
@@ -47,7 +45,8 @@ class CadastroTagState extends State<CadastroTag> {
                     nome: _nomeController.text,
                     descricao: _descricaoController.text,
                     dificuldade: _dificuldadeSelecionado,
-                    culinaria: _culinariaSelecionada
+                    culinaria: _culinariaSelecionada,
+                    categoria: _categoriaSelecionada
                   );
                   banco.salvarTag(tag);
                   if (!context.mounted) return;
@@ -149,6 +148,41 @@ class CadastroTagState extends State<CadastroTag> {
                 fillColor: Colors.black12,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 labelText: 'Culinária',
+              ),
+            ),
+            const SizedBox(height: 30.0),
+            DropdownButtonFormField<String>(
+              value: _categoriaSelecionada,
+              borderRadius: BorderRadius.circular(20),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _categoriaSelecionada = newValue!;
+                });
+              },
+              items: <String>[
+                'Escolha',
+                'Almoço',
+                'Jantar',
+                'Café da Manhã',
+                'Lanche',
+                'Sobremesa',
+                'Aperitivo',
+                'Bebida'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                filled: true,
+                fillColor: Colors.black12,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelText: 'Categoria',
               ),
             ),
           ],
