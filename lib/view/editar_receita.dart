@@ -128,7 +128,7 @@ class _EditarReceitaState extends State<EditarReceita> {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: _corPrincipal.withOpacity(0.1),
+                color: const Color.fromARGB(255, 147, 49, 49),
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),

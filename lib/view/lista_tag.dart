@@ -45,21 +45,21 @@ class ListaTagState extends State<ListaTag> {
   Color _getColorForCategory(String categoria) {
     switch (categoria.toLowerCase()) {
       case 'almoço':
-        return Colors.orange.shade300;
+        return const Color(0xFFE67E22); // Laranja quente
       case 'jantar':
-        return Colors.purple.shade300;
+        return const Color(0xFF8E44AD); // Roxo suave
       case 'café da manhã':
-        return Colors.yellow.shade300;
+        return const Color(0xFFF1C40F); // Amarelo quente
       case 'lanche':
-        return Colors.pink.shade300;
+        return const Color(0xFFE74C3C); // Vermelho suave
       case 'sobremesa':
-        return Colors.red.shade300;
+        return const Color(0xFFC0392B); // Vermelho escuro
       case 'aperitivo':
-        return Colors.green.shade300;
+        return const Color(0xFF27AE60); // Verde suave
       case 'bebida':
-        return Colors.blue.shade300;
+        return const Color(0xFF2980B9); // Azul suave
       default:
-        return Colors.grey.shade300;
+        return const Color(0xFF7F8C8D); // Cinza neutro
     }
   }
 
@@ -115,7 +115,7 @@ class ListaTagState extends State<ListaTag> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 253, 243, 243),
+      backgroundColor: const Color(0xFFFDF6F0), 
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 147, 49, 49),
         foregroundColor: Colors.white,

@@ -35,21 +35,21 @@ class _DadosTagState extends State<DadosTag> {
   Color _getColorForCategory(String categoria) {
     switch (categoria.toLowerCase()) {
       case 'almoço':
-        return Colors.orange.shade300;
+        return const Color(0xFFE67E22); // Laranja quente
       case 'jantar':
-        return Colors.purple.shade300;
+        return const Color(0xFF8E44AD); // Roxo suave
       case 'café da manhã':
-        return Colors.yellow.shade300;
+        return const Color(0xFFF1C40F); // Amarelo quente
       case 'lanche':
-        return Colors.pink.shade300;
+        return const Color(0xFFE74C3C); // Vermelho suave
       case 'sobremesa':
-        return Colors.red.shade300;
+        return const Color(0xFFC0392B); // Vermelho escuro
       case 'aperitivo':
-        return Colors.green.shade300;
+        return const Color(0xFF27AE60); // Verde suave
       case 'bebida':
-        return Colors.blue.shade300;
+        return const Color(0xFF2980B9); // Azul suave
       default:
-        return Colors.grey.shade300;
+        return const Color(0xFF7F8C8D); // Cinza neutro
     }
   }
 
@@ -64,7 +64,7 @@ class _DadosTagState extends State<DadosTag> {
       appBar: AppBar(
         title: Text(tag.nome),
         foregroundColor: Colors.white,
-        backgroundColor: color,
+        backgroundColor: const Color.fromARGB(255, 147, 49, 49),
         actions: [
           IconButton(
             onPressed: () async {
@@ -98,7 +98,7 @@ class _DadosTagState extends State<DadosTag> {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: const Color.fromARGB(255, 147, 49, 49),
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
