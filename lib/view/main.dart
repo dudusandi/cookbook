@@ -5,7 +5,6 @@ import '../data/banco.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'cadastro_tag.dart';
 import 'cadastro_receita.dart';
-import 'home.dart';
 import 'lista_receita.dart';
 import 'dados_tag.dart';
 import 'lista_tag.dart';
@@ -79,21 +78,24 @@ class InicioState extends State<Inicio> {
 
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color.fromARGB(255, 132, 94, 143),
+        backgroundColor: const Color.fromARGB(255, 147, 49, 49),
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        selectedLabelStyle: const TextStyle(color: Colors.white),
+        unselectedLabelStyle: const TextStyle(color: Colors.white70),
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
         items: const [
           BottomNavigationBarItem(
             backgroundColor: Colors.white,
             icon: Icon(Icons.book_rounded, color: Colors.white,),
             label: 'Receitas',
-          
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.tag),
             label: 'Tags',
           ),
-            BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Ajustes',
           ),

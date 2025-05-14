@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flush/controller/ajustes_controller.dart';
+import 'package:flush/ajustes/ajustes.dart';
 import 'package:flush/model/receita.dart';
 import 'package:flush/model/tag.dart';
 import 'package:postgres/postgres.dart';
@@ -118,7 +118,7 @@ class Banco {
 
     List<Receita> receitas = [];
     for (var row in results) {
-      receitas.add(Receita(
+      final receita = Receita(
         id: row[0] as int,
         nome: row[1] as String,
         tempoPreparo: row[2] as String,
@@ -126,8 +126,8 @@ class Banco {
         ingredientes: row[4] as String,
         tags: (row[5] as String).split(','),
         imagem: row[6] as Uint8List?,
-
-      ));
+      );
+      receitas.add(receita);
     }
 
     await conn.close();
@@ -203,10 +203,71 @@ Future<void> salvarReceita(Receita receita) async {
     
     await conn.close();
   } catch (e) {
-    print('Erro ao salvar receita: $e');
     rethrow;
   }
 }
 
+Future<void> atualizarReceita(Receita receita) async {
+  try {
+    final conn = await conectarbanco();
+      final checkResult = await conn.execute(
+      Sql.named('SELECT id FROM receitas WHERE id = @id'),
+      parameters: {'id': receita.id},
+    );
+    
+    if (checkResult.isEmpty) {
+    }
+    
+    
+    String query;
+    Map<String, dynamic> params = {
+      'id': receita.id,
+      'nome': receita.nome,
+      'tempoPreparo': receita.tempoPreparo,
+      'modoPreparo': receita.modoPreparo,
+      'ingredientes': receita.ingredientes,
+      'tags': receita.tags.join(','),
+    };
+
+    if (receita.imagem != null) {
+      query = '''
+        UPDATE public.receitas 
+        SET nome = @nome,
+            tempoPreparo = @tempoPreparo,
+            modoPreparo = @modoPreparo,
+            ingredientes = @ingredientes,
+            tags = @tags,
+            imagem = decode(@imagem, 'base64')
+        WHERE id = @id
+      ''';
+      params['imagem'] = base64Encode(receita.imagem!);
+    } else {
+      query = '''
+        UPDATE public.receitas 
+        SET nome = @nome,
+            tempoPreparo = @tempoPreparo,
+            modoPreparo = @modoPreparo,
+            ingredientes = @ingredientes,
+            tags = @tags
+        WHERE id = @id
+      ''';
+    }
+
+    
+    final result = await conn.execute(
+      Sql.named(query),
+      parameters: params,
+    );
+    
+    
+    if (result.affectedRows == 0) {
+      throw Exception('Nenhuma linha foi atualizada');
+    }
+    
+    await conn.close();
+  } catch (e) {
+    rethrow;
+  }
+}
 
 }

@@ -1,6 +1,7 @@
 import 'package:flush/model/receita.dart';
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
+import 'editar_receita.dart';
 
 class DadosReceita extends StatefulWidget {
   const DadosReceita({super.key});
@@ -15,14 +16,31 @@ class _DadosReceitaState extends State<DadosReceita> {
     final Receita receita =
         ModalRoute.of(context)!.settings.arguments as Receita;
 
+    print('DadosReceita - ID da receita: ${receita.id}');
+    print('DadosReceita - Nome da receita: ${receita.nome}');
+
     Banco banco = Banco();
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 253, 243, 243),
       appBar: AppBar(
         title: Text(receita.nome),
         foregroundColor: Colors.white,
-        backgroundColor: Color.fromARGB(255, 132, 94, 143),
+        backgroundColor: const Color.fromARGB(255, 147, 49, 49),
         actions: [
+          IconButton(
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditarReceita(receita: receita),
+                  ),
+                );
+                if (result == true && context.mounted) {
+                  Navigator.pop(context, true);
+                }
+              },
+              icon: const Icon(Icons.edit)),
           IconButton(
               onPressed: () async {
                 await banco.removerReceita(receita.nome);
@@ -60,8 +78,8 @@ class _DadosReceitaState extends State<DadosReceita> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 5),
+                children: const [
+                  SizedBox(height: 5),
                 ],
               ),
               const SizedBox(height: 20),

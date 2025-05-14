@@ -1,4 +1,4 @@
-import 'package:flush/controller/ajustes_controller.dart';
+import 'package:flush/ajustes/ajustes.dart';
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
 import 'main.dart';
@@ -63,9 +63,10 @@ class AjustesState extends State<Ajustes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 253, 243, 243),
       appBar: AppBar(
-        backgroundColor: const Color(0xff004c9e),
-        foregroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 147, 49, 49),
+        foregroundColor: const Color.fromARGB(255, 253, 243, 243),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -116,7 +117,7 @@ class AjustesState extends State<Ajustes> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   filled: true,
-                  fillColor: Colors.grey.shade200,
+                  fillColor: const Color.fromARGB(255, 225, 224, 224),
                   prefixIcon: const Icon(Icons.computer),
                 ),
               ),
@@ -132,7 +133,7 @@ class AjustesState extends State<Ajustes> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     filled: true,
-                    fillColor: Colors.grey.shade200,
+                    fillColor: const Color.fromARGB(255, 225, 224, 224),
                     prefixIcon: const Icon(Icons.people),
                   ),
                 ),
@@ -148,7 +149,7 @@ class AjustesState extends State<Ajustes> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     filled: true,
-                    fillColor: Colors.grey.shade200,
+                    fillColor: const Color.fromARGB(255, 225, 224, 224),
                     prefixIcon: const Icon(Icons.storage),
                   ),
                 ),
@@ -164,7 +165,7 @@ class AjustesState extends State<Ajustes> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     filled: true,
-                    fillColor: Colors.grey.shade200,
+                    fillColor: const Color.fromARGB(255, 225, 224, 224),
                     prefixIcon: const Icon(Icons.people),
                   ),
                 ),
@@ -195,7 +196,7 @@ class AjustesState extends State<Ajustes> {
                       },
                     ),
                     filled: true,
-                    fillColor: Colors.grey.shade200,
+                    fillColor: const Color.fromARGB(255, 225, 224, 224),
                   ),
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.done,
@@ -214,7 +215,7 @@ class AjustesState extends State<Ajustes> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     filled: true,
-                    fillColor: Colors.grey.shade200,
+                    fillColor: const Color.fromARGB(255, 225, 224, 224),
                   ),
                   items: _items,
                   onChanged: (String? newValue) {

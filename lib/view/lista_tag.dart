@@ -78,7 +78,10 @@ class ListaTagState extends State<ListaTag> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 253, 243, 243),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 147, 49, 49),
+        foregroundColor: Colors.white,
         title: const Text('Tags'),
         actions: [
           IconButton(
@@ -127,7 +130,6 @@ class ListaTagState extends State<ListaTag> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(tags[index].nome),
-                  subtitle: Text(tags[index].descricao),
                   onTap: () async {
                     await Navigator.push(
                             context,

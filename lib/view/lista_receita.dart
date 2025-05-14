@@ -43,23 +43,25 @@ class _ListaReceitaState extends State<ListaReceita> {
 
     final results = await conn.execute(
       Sql.named(
-          'SELECT nome, tempopreparo, modopreparo, ingredientes, tags, imagem FROM receitas ORDER BY nome'),
+          'SELECT id, nome, tempopreparo, modopreparo, ingredientes, tags, imagem FROM receitas ORDER BY nome'),
     );
 
     for (var row in results) {
       Receita receita = Receita(
-        nome: row[0] as String,
-        tempoPreparo: row[1] as String,
-        modoPreparo: row[2] as String,
-        ingredientes: row[3] as String,
-        tags: (row[4] as String?)
+        id: row[0] as int,
+        nome: row[1] as String,
+        tempoPreparo: row[2] as String,
+        modoPreparo: row[3] as String,
+        ingredientes: row[4] as String,
+        tags: (row[5] as String?)
                 ?.replaceAll(RegExp(r'[\{\}]'), '')
                 .split(',')
                 .map((e) => e.trim())
                 .toList() ??
             [],
-        imagem: row[5] as Uint8List?,
+        imagem: row[6] as Uint8List?,
       );
+      print('ListaReceita - Receita carregada - ID: ${receita.id}, Nome: ${receita.nome}');
       receitas.add(receita);
     }
 
@@ -84,9 +86,9 @@ class _ListaReceitaState extends State<ListaReceita> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 238, 252),
+      backgroundColor: const Color.fromARGB(255, 253, 243, 243),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 132, 94, 143),
+        backgroundColor: const Color.fromARGB(255, 147, 49, 49),
         title: const Text('Receitas', style: TextStyle(color: Colors.white, fontSize: 24)),
         actions: [
           IconButton(
@@ -122,17 +124,17 @@ body: _isLoading
         child: CircularProgressIndicator(),
       )
     : Padding(
-        padding: const EdgeInsets.only(top: 16.0, left: 10, right: 10), // Margem no topo da lista
+        padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4),
         child: ListView.builder(
           itemCount: receitasFiltradas.length,
           itemBuilder: (context, index) {
             return Container(
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0), // Margem para cada item
+              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0), 
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: const Color.fromARGB(255, 255, 182, 219), 
-                    width: 0.5, // Espessura da linha
+                    color: const Color.fromARGB(255, 255, 185, 185), 
+                    width: 0.5, 
                   ),
                 ),
               ),
@@ -161,18 +163,23 @@ body: _isLoading
                       ),
                 title: Text(
                   receitasFiltradas[index].nome,
-                  style: TextStyle(fontSize: 20, color: Colors.pink[900]),
+                  style: TextStyle(fontSize: 20, color: const Color.fromARGB(255, 72, 28, 28)),
                 ),
                 subtitle: Text(
-                  receitasFiltradas[index].tempoPreparo?.toString() ?? 'Tempo não informado',
-                  style: TextStyle(fontSize: 16, color: Colors.pink[700]),
+                  receitasFiltradas[index].tempoPreparo.toString(),
+                  style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 193, 175, 175)),
                 ),
                 onTap: () async {
-                  await Navigator.pushNamed(context, '/dadosprojeto',
-                          arguments: receitasFiltradas[index])
-                      .then((value) => setState(() {
-                            value == true ? atualizarListaPesquisas() : null;
-                          }));
+                  final result = await Navigator.pushNamed(
+                    context,
+                    '/dadosprojeto',
+                    arguments: receitasFiltradas[index],
+                  );
+                  
+                  if (result == true) {
+                    print('Atualizando lista após edição/remoção');
+                    await atualizarListaPesquisas();
+                  }
                 },
               ),
             );
