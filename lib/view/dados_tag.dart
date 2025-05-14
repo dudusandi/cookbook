@@ -109,7 +109,7 @@ class _DadosTagState extends State<DadosTag> {
                   Icon(
                     icon,
                     size: 80,
-                    color: color,
+                    color: Colors.white,
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -117,7 +117,7 @@ class _DadosTagState extends State<DadosTag> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: color,
+                      color: Colors.white
                     ),
                   ),
                 ],
