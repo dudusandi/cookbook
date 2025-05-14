@@ -106,10 +106,9 @@ class Banco {
     return null;
   }
 
-  Future<List<String>> listarTags() async {
+  Future<List<Map<String, dynamic>>> listarTags() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('tags', orderBy: 'nome');
-    return List.generate(maps.length, (i) => maps[i]['nome'] as String);
+    return await db.query('tags', orderBy: 'nome');
   }
 
   Future<void> removerReceita(String nome) async {

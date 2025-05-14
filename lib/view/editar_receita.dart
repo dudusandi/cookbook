@@ -42,7 +42,7 @@ class _EditarReceitaState extends State<EditarReceita> {
     try {
       final tags = await _banco.listarTags();
       setState(() {
-        _todasTags = tags;
+        _todasTags = tags.map((tag) => tag['nome'] as String).toList();
         _tagsSelecionadas = List.from(_tags);
       });
     } catch (e) {

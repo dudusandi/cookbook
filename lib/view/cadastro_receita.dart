@@ -63,9 +63,9 @@ class _CadastroReceitaState extends State<CadastroReceita> {
 
   Future<void> _carregarTags() async {
     try {
-      List<String> tags = await _banco.listarTags();
+      final tags = await _banco.listarTags();
       setState(() {
-        _todasTags = tags;
+        _todasTags = tags.map((tag) => tag['nome'] as String).toList();
       });
     } catch (e) {
       if (mounted) {
