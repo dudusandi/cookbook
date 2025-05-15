@@ -122,12 +122,6 @@ class ListaTagState extends State<ListaTag> {
         title: const Text('Tags'),
         actions: [
           IconButton(
-            onPressed: () {
-              atualizarListaTags();
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-          IconButton(
             onPressed: () async {
               Navigator.pushNamed(context, '/cadastro').then(
                 (value) => setState(

@@ -1,6 +1,7 @@
 import 'package:cookbook/model/receita.dart';
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
+import 'dados_receita.dart';
 
 class BuscaReceita extends SearchDelegate {
   final List<Receita> receitas;
@@ -30,6 +31,10 @@ class BuscaReceita extends SearchDelegate {
       inputDecorationTheme: const InputDecorationTheme(
         border: InputBorder.none,
         hintStyle: TextStyle(color: Colors.white70),
+        prefixStyle: TextStyle(color: Colors.white),
+      ),
+      textTheme: const TextTheme(
+        titleLarge: TextStyle(color: Colors.white),
       ),
     );
   }
@@ -226,9 +231,12 @@ class BuscaReceita extends SearchDelegate {
               ],
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/dadosprojeto',
-                  arguments: receita)
-                  .then((value) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DadosReceita(receita: receita),
+                ),
+              ).then((value) {
                 if (value == true && context.mounted) {
                   close(context, true);
                 }

@@ -66,13 +66,6 @@ class _ListaReceitaState extends State<ListaReceita> {
         title: const Text('CookBook', style: TextStyle(color: Colors.white, fontSize: 24)),
         actions: [
           IconButton(
-             color: Colors.white,
-            onPressed: () {
-              atualizarListaPesquisas();
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-          IconButton(
             color: Colors.white,
             onPressed: () async {
               Navigator.push(
