@@ -35,21 +35,21 @@ class _DadosTagState extends State<DadosTag> {
   Color _getColorForCategory(String categoria) {
     switch (categoria.toLowerCase()) {
       case 'almoço':
-        return const Color(0xFFE67E22); // Laranja quente
+        return const Color(0xFFE67E22); 
       case 'jantar':
-        return const Color(0xFF8E44AD); // Roxo suave
+        return const Color(0xFF8E44AD); 
       case 'café da manhã':
-        return const Color(0xFFF1C40F); // Amarelo quente
+        return const Color(0xFFF1C40F); 
       case 'lanche':
-        return const Color(0xFFE74C3C); // Vermelho suave
+        return const Color(0xFFE74C3C); 
       case 'sobremesa':
-        return const Color(0xFFC0392B); // Vermelho escuro
+        return const Color(0xFFC0392B);
       case 'aperitivo':
-        return const Color(0xFF27AE60); // Verde suave
+        return const Color(0xFF27AE60); 
       case 'bebida':
-        return const Color(0xFF2980B9); // Azul suave
+        return const Color(0xFF2980B9); 
       default:
-        return const Color(0xFF7F8C8D); // Cinza neutro
+        return const Color(0xFF7F8C8D); 
     }
   }
 
