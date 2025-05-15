@@ -115,7 +115,7 @@ class ListaTagState extends State<ListaTag> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF6F0), 
+      backgroundColor: const Color.fromARGB(255, 255, 253, 252), 
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 147, 49, 49),
         foregroundColor: Colors.white,
@@ -159,7 +159,7 @@ class ListaTagState extends State<ListaTag> {
               child: CircularProgressIndicator(),
             )
           : GridView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1.5,
@@ -216,24 +216,23 @@ class ListaTagState extends State<ListaTag> {
                               size: 32,
                               color: Colors.white,
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 4),
                             Text(
                               tag.nome,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.center,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 4),
                             Text(
                               tag.categoria,
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.8),
-                                fontSize: 12,
+                                fontSize: 11,
                               ),
                               textAlign: TextAlign.center,
                             ),

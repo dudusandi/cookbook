@@ -58,10 +58,10 @@ class _ListaReceitaState extends State<ListaReceita> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF6F0), 
+      backgroundColor: const Color.fromARGB(255, 252, 248, 248), 
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 147, 49, 49),
-        title: const Text('Receitas', style: TextStyle(color: Colors.white, fontSize: 24)),
+        title: const Text('CookBook', style: TextStyle(color: Colors.white, fontSize: 24)),
         actions: [
           IconButton(
              color: Colors.white,

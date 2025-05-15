@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Fundo do livro -->
+    <rect x="212" y="112" width="600" height="800" rx="40" fill="#933131"/>
+    
+    <!-- Páginas do livro -->
+    <rect x="232" y="132" width="560" height="760" rx="30" fill="#FFFFFF"/>
+    
+    <!-- Panela -->
+    <path d="M412 412C412 352.5 462.5 302 522 302H502C561.5 302 612 352.5 612 412V612C612 671.5 561.5 722 502 722H522C462.5 722 412 671.5 412 612V412Z" fill="#933131"/>
+    
+    <!-- Alça da panela -->
+    <path d="M612 462H712C722 462 730 470 730 480V544C730 554 722 562 712 562H612" stroke="#933131" stroke-width="40" stroke-linecap="round"/>
+    
+    <!-- Vapor -->
+    <path d="M512 302V262" stroke="#933131" stroke-width="20" stroke-linecap="round"/>
+    <path d="M482 282V242" stroke="#933131" stroke-width="20" stroke-linecap="round"/>
+    <path d="M542 282V242" stroke="#933131" stroke-width="20" stroke-linecap="round"/>
+</svg> 

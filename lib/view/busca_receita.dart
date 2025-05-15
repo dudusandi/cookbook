@@ -1,7 +1,6 @@
 import 'package:cookbook/model/receita.dart';
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
-import '../model/tag.dart';
 
 class BuscaReceita extends SearchDelegate {
   final List<Receita> receitas;

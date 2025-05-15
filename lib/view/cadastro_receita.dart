@@ -99,7 +99,7 @@ class _CadastroReceitaState extends State<CadastroReceita> {
                     tempoPreparo: tempoPreparoController.text,
                     modoPreparo: modoPreparoController.text,
                     ingredientes: ingredientesController.text,
-                    tags: _tagsSelecionadas,
+                    tags: _tagsSelecionadas.where((tag) => tag.isNotEmpty).toList(),
                     imagem: _imagem,
                   );
 
@@ -231,8 +231,21 @@ class _CadastroReceitaState extends State<CadastroReceita> {
                             ),
                             const SizedBox(height: 16),
                             if (_todasTags.isEmpty)
-                              const Center(
-                                child: CircularProgressIndicator(),
+                              Center(
+                                child: Column(
+                                  children: [
+                                    const Icon(Icons.info_outline, color: Colors.grey, size: 30),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Nenhuma tag disponível.\nAdicione tags em "Gerenciar Tags"',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               )
                             else
                               Wrap(
