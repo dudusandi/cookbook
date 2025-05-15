@@ -20,7 +20,7 @@ class _DadosReceitaState extends State<DadosReceita> {
 
   @override
   Widget build(BuildContext context) {
-    final Banco _banco = Banco();
+    final Banco banco = Banco();
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +44,7 @@ class _DadosReceitaState extends State<DadosReceita> {
           ),
           IconButton(
             onPressed: () async {
-              await _banco.removerReceita(widget.receita.nome);
+              await banco.removerReceita(widget.receita.nome);
               if (context.mounted) {
                 Navigator.pop(context, true);
               }
@@ -148,7 +148,7 @@ class _DadosReceitaState extends State<DadosReceita> {
                             children: widget.receita.tags.map((tag) {
                               return Chip(
                                 label: Text(tag),
-                                backgroundColor: _corPrincipal.withOpacity(0.1),
+                                backgroundColor: _corPrincipal.withValues(alpha: 0.1),
                                 labelStyle: TextStyle(color: _corPrincipal),
                               );
                             }).toList(),

@@ -30,10 +30,10 @@ class _CadastroReceitaState extends State<CadastroReceita> {
   Future<void> _selecionarImagem() async {
     final XFile? imagemSelecionada = await _picker.pickImage(source: ImageSource.gallery);
     if (imagemSelecionada != null) {
-      final imagem_compactada = await _comprimirImagem(imagemSelecionada);
-      if (imagem_compactada != null) {
+      final imagemCompactada = await _comprimirImagem(imagemSelecionada);
+      if (imagemCompactada != null) {
         setState(() {
-          _imagem = imagem_compactada;
+          _imagem = imagemCompactada;
         });
       } else {
         if (mounted) {

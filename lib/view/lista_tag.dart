@@ -202,7 +202,7 @@ class ListaTagState extends State<ListaTag> {
                           end: Alignment.bottomRight,
                           colors: [
                             color,
-                            color.withOpacity(0.7),
+                            color.withValues(alpha: 0.7)
                           ],
                         ),
                       ),
@@ -231,7 +231,7 @@ class ListaTagState extends State<ListaTag> {
                             Text(
                               tag.categoria,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 11,
                               ),
                               textAlign: TextAlign.center,

@@ -13,13 +13,11 @@ class BuscaReceita extends SearchDelegate {
   }
 
   Future<void> _carregarCategoriasTags() async {
-    try {
+
       final tags = await _banco.listarTags();
       for (var tag in tags) {
         _categoriasTags[tag['nome']] = tag['categoria'];
       }
-    } catch (e) {
-    }
   }
 
   @override
@@ -215,7 +213,7 @@ class BuscaReceita extends SearchDelegate {
                           tag,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        backgroundColor: const Color.fromARGB(255, 147, 49, 49).withOpacity(0.1),
+                        backgroundColor: const Color.fromARGB(255, 147, 49, 49).withValues(alpha: 0.1),
                         labelStyle: const TextStyle(
                           color: Color.fromARGB(255, 147, 49, 49),
                         ),
