@@ -53,7 +53,6 @@ class Banco {
   Future<void> salvarTag(Tag tag) async {
     final db = await database;
     
-    // Verifica se a tag já existe
     final List<Map<String, dynamic>> tags = await db.query(
       'tags',
       where: 'descricao = ?',
@@ -69,10 +68,8 @@ class Banco {
     };
 
     if (tags.isEmpty) {
-      // Se não existe, insere como nova tag
       await db.insert('tags', tagData);
     } else {
-      // Se existe, atualiza a tag existente
       await db.update(
         'tags',
         tagData,
@@ -80,12 +77,10 @@ class Banco {
         whereArgs: [tag.descricao],
       );
 
-      // Atualiza as receitas que usam esta tag
       final List<Map<String, dynamic>> receitas = await db.query('receitas');
       for (var receita in receitas) {
         List<String> tagsReceita = (receita['tags'] as String).split(',');
         if (tagsReceita.contains(tags[0]['nome'])) {
-          // Substitui o nome antigo da tag pelo novo
           tagsReceita = tagsReceita.map((t) => t == tags[0]['nome'] ? tag.nome : t).toList();
           
           await db.update(

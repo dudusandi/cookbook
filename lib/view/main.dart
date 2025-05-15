@@ -1,11 +1,7 @@
-import 'package:cookbook/view/dados_receita.dart';
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'cadastro_tag.dart';
-import 'cadastro_receita.dart';
 import 'lista_receita.dart';
-import 'dados_tag.dart';
 import 'lista_tag.dart';
 
 void main() {
@@ -18,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lista de Pesquisadores',
+      title: 'Livro de Receitas',
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -27,15 +23,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('pt', 'BR'), 
       ],
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const Inicio(),
-        '/detalhes': (context) => const DadosTag(),
-        '/cadastro': (context) => const CadastroTag(),
-        '/cadastro_projeto': (context) => const CadastroReceita(),
-        '/listapesquisadores': (context) => const ListaTag(),
-        '/dadosprojeto': (context) => const DadosReceita()
-      },
+      home: const Inicio(),
     );
   }
 }

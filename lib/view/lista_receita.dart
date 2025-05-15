@@ -2,6 +2,8 @@ import 'package:cookbook/model/receita.dart';
 import 'package:flutter/material.dart';
 import '../data/banco.dart';
 import 'busca_receita.dart';
+import 'cadastro_receita.dart';
+import 'dados_receita.dart';
 
 class ListaReceita extends StatefulWidget {
   const ListaReceita({super.key});
@@ -73,7 +75,10 @@ class _ListaReceitaState extends State<ListaReceita> {
           IconButton(
             color: Colors.white,
             onPressed: () async {
-              Navigator.pushNamed(context, '/cadastro_projeto').then(
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CadastroReceita()),
+              ).then(
                 (value) => setState(() {
                   value == true ? atualizarListaPesquisas() : null;
                 }),
@@ -141,10 +146,11 @@ class _ListaReceitaState extends State<ListaReceita> {
                         style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 193, 175, 175)),
                       ),
                       onTap: () async {
-                        final result = await Navigator.pushNamed(
+                        final result = await Navigator.push(
                           context,
-                          '/dadosprojeto',
-                          arguments: receitasFiltradas[index],
+                          MaterialPageRoute(
+                            builder: (context) => DadosReceita(receita: receitasFiltradas[index]),
+                          ),
                         );
                         
                         if (result == true) {

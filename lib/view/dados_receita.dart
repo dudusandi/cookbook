@@ -4,7 +4,12 @@ import '../data/banco.dart';
 import 'editar_receita.dart';
 
 class DadosReceita extends StatefulWidget {
-  const DadosReceita({super.key});
+  final Receita receita;
+  
+  const DadosReceita({
+    super.key,
+    required this.receita,
+  });
 
   @override
   State<DadosReceita> createState() => _DadosReceitaState();
@@ -15,12 +20,11 @@ class _DadosReceitaState extends State<DadosReceita> {
 
   @override
   Widget build(BuildContext context) {
-    final Receita receita = ModalRoute.of(context)!.settings.arguments as Receita;
     final Banco _banco = Banco();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(receita.nome),
+        title: Text(widget.receita.nome),
         foregroundColor: Colors.white,
         backgroundColor: _corPrincipal,
         actions: [
@@ -29,7 +33,7 @@ class _DadosReceitaState extends State<DadosReceita> {
               final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditarReceita(receita: receita),
+                  builder: (context) => EditarReceita(receita: widget.receita),
                 ),
               );
               if (result == true && context.mounted) {
@@ -40,7 +44,7 @@ class _DadosReceitaState extends State<DadosReceita> {
           ),
           IconButton(
             onPressed: () async {
-              await _banco.removerReceita(receita.nome);
+              await _banco.removerReceita(widget.receita.nome);
               if (context.mounted) {
                 Navigator.pop(context, true);
               }
@@ -63,13 +67,12 @@ class _DadosReceitaState extends State<DadosReceita> {
                 ),
               ),
               child: Column(
-                
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: receita.imagem != null
+                    child: widget.receita.imagem != null
                         ? Image.memory(
-                            receita.imagem!,
+                            widget.receita.imagem!,
                             height: 200,
                             width: double.infinity,
                             fit: BoxFit.cover,
@@ -95,21 +98,21 @@ class _DadosReceitaState extends State<DadosReceita> {
                 children: [
                   _buildInfoCard(
                     'Tempo de Preparo',
-                    receita.tempoPreparo,
+                    widget.receita.tempoPreparo,
                     Icons.timer,
                     _corPrincipal,
                   ),
                   const SizedBox(height: 16),
                   _buildInfoCard(
                     'Ingredientes',
-                    receita.ingredientes,
+                    widget.receita.ingredientes,
                     Icons.shopping_basket,
                     _corPrincipal,
                   ),
                   const SizedBox(height: 16),
                   _buildInfoCard(
                     'Modo de Preparo',
-                    receita.modoPreparo,
+                    widget.receita.modoPreparo,
                     Icons.menu_book,
                     _corPrincipal,
                   ),
@@ -142,7 +145,7 @@ class _DadosReceitaState extends State<DadosReceita> {
                           Wrap(
                             spacing: 8.0,
                             runSpacing: 8.0,
-                            children: receita.tags.map((tag) {
+                            children: widget.receita.tags.map((tag) {
                               return Chip(
                                 label: Text(tag),
                                 backgroundColor: _corPrincipal.withOpacity(0.1),
