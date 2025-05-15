@@ -4,7 +4,12 @@ import '../data/banco.dart';
 import 'editar_tag.dart';
 
 class DadosTag extends StatefulWidget {
-  const DadosTag({super.key});
+  final Tag tag;
+  
+  const DadosTag({
+    super.key,
+    required this.tag,
+  });
 
   @override
   State<DadosTag> createState() => _DadosTagState();
@@ -55,14 +60,13 @@ class _DadosTagState extends State<DadosTag> {
 
   @override
   Widget build(BuildContext context) {
-    final Tag tag = ModalRoute.of(context)!.settings.arguments as Tag;
-    final color = _getColorForCategory(tag.categoria);
-    final icon = _getIconForCategory(tag.categoria);
+    final color = _getColorForCategory(widget.tag.categoria);
+    final icon = _getIconForCategory(widget.tag.categoria);
     Banco banco = Banco();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(tag.nome),
+        title: Text(widget.tag.nome),
         foregroundColor: Colors.white,
         backgroundColor: const Color.fromARGB(255, 147, 49, 49),
         actions: [
@@ -71,7 +75,7 @@ class _DadosTagState extends State<DadosTag> {
               final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditarTag(tag: tag),
+                  builder: (context) => EditarTag(tag: widget.tag),
                 ),
               );
               if (result == true && context.mounted) {
@@ -82,7 +86,7 @@ class _DadosTagState extends State<DadosTag> {
           ),
           IconButton(
             onPressed: () async {
-              await banco.removerTag(tag.nome);
+              await banco.removerTag(widget.tag.nome);
               if (context.mounted) {
                 Navigator.pop(context, true);
               }
@@ -113,7 +117,7 @@ class _DadosTagState extends State<DadosTag> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    tag.categoria,
+                    widget.tag.categoria,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -130,35 +134,35 @@ class _DadosTagState extends State<DadosTag> {
                 children: [
                   _buildInfoCard(
                     'Nome',
-                    tag.nome,
+                    widget.tag.nome,
                     Icons.label,
                     color,
                   ),
                   const SizedBox(height: 16),
                   _buildInfoCard(
                     'Descrição',
-                    tag.descricao,
+                    widget.tag.descricao,
                     Icons.description,
                     color,
                   ),
                   const SizedBox(height: 16),
                   _buildInfoCard(
                     'Dificuldade',
-                    tag.dificuldade,
+                    widget.tag.dificuldade,
                     Icons.trending_up,
                     color,
                   ),
                   const SizedBox(height: 16),
                   _buildInfoCard(
                     'Culinária',
-                    tag.culinaria,
+                    widget.tag.culinaria,
                     Icons.restaurant,
                     color,
                   ),
                   const SizedBox(height: 16),
                   _buildInfoCard(
                     'Categoria',
-                    tag.categoria,
+                    widget.tag.categoria,
                     icon,
                     color,
                   ),

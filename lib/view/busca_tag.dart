@@ -67,8 +67,7 @@ class BuscaTag extends SearchDelegate {
             await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const DadosTag(),
-                settings: RouteSettings(arguments: suggestions[index]),
+                builder: (context) => DadosTag(tag: suggestions[index]),
               ),
             ).then((value) {
               if (value == true && context.mounted) {

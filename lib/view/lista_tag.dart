@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cookbook/view/dados_tag.dart';
 import '../data/banco.dart';
 import 'busca_tag.dart';
+import 'cadastro_tag.dart';
 
 class ListaTag extends StatefulWidget {
   const ListaTag({super.key});
@@ -123,7 +124,10 @@ class ListaTagState extends State<ListaTag> {
         actions: [
           IconButton(
             onPressed: () async {
-              Navigator.pushNamed(context, '/cadastro').then(
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CadastroTag()),
+              ).then(
                 (value) => setState(
                   () {
                     if (value == true) {
@@ -176,8 +180,7 @@ class ListaTagState extends State<ListaTag> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const DadosTag(),
-                          settings: RouteSettings(arguments: tag),
+                          builder: (context) => DadosTag(tag: tag),
                         ),
                       ).then(
                         (value) => setState(() {
