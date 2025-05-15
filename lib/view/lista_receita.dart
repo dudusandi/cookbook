@@ -154,7 +154,6 @@ class _ListaReceitaState extends State<ListaReceita> {
                         );
                         
                         if (result == true) {
-                          print('Atualizando lista após edição/remoção');
                           await atualizarListaPesquisas();
                         }
                       },

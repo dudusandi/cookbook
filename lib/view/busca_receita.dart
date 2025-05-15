@@ -19,7 +19,6 @@ class BuscaReceita extends SearchDelegate {
         _categoriasTags[tag['nome']] = tag['categoria'];
       }
     } catch (e) {
-      print('Erro ao carregar categorias: $e');
     }
   }
 

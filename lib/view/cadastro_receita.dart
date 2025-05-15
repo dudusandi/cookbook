@@ -56,7 +56,6 @@ class _CadastroReceitaState extends State<CadastroReceita> {
       }
       return null;
     } catch (e) {
-      print('Erro na compressão: $e');
       return null;
     }
   }
